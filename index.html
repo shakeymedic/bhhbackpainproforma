@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BHH/GHH ED Low Back Pain Assessment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #64748b; border-radius: 4px; }
+        html { scroll-behavior: smooth; }
+        [id^="sec-"] { scroll-margin-top: 140px; }
+
+        input, textarea, select { border-color: #94a3b8; outline: none; transition: all 0.2s; }
+        input:focus, textarea:focus, select:focus { border-color: #2563eb; ring: 2px; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); }
+
+        .rich-output {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: #334155;
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            min-height: 24rem;
+            overflow-y: auto;
+            white-space: pre-wrap; 
+        }
+        .rich-output strong { font-weight: 800; color: #0f172a; }
+
+        /* Buttons */
+        .std-btn { transition: all 0.1s; border-color: #cbd5e1; background-color: #f8fafc; color: #334155; }
+        .std-btn:hover { background-color: #e2e8f0; }
+        .std-btn.active { background-color: #2563eb; color: white; border-color: #1d4ed8; font-weight: 800; }
+
+        /* Flags */
+        .flag-btn { transition: all 0.1s; background-color: white; border-color: #fecaca; color: #7f1d1d; }
+        .flag-btn:hover { background-color: #fef2f2; }
+        .flag-btn.active { background-color: #dc2626; color: white; border-color: #991b1b; font-weight: 800; }
+
+        /* Inputs */
+        .neuro-cell select {
+            font-size: 0.75rem;
+            padding: 6px;
+            width: 100%;
+            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+            background-color: #fff;
+            font-weight: 600;
+        }
+
+        /* Nav */
+        .nav-link {
+            padding: 0.25rem 0.6rem;
+            border-radius: 0.375rem;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            transition: all 0.1s;
+            border: 1px solid transparent;
+            color: #475569;
+        }
+        .nav-link:hover { background-color: #e2e8f0; color: #0f172a; }
+        .nav-link.nav-red { color: #b91c1c; background: #fef2f2; border-color: #fee2e2; } .nav-link.nav-red:hover { background: #dc2626; color: white; }
+        .nav-link.nav-blue { color: #1d4ed8; background: #eff6ff; border-color: #dbeafe; } .nav-link.nav-blue:hover { background: #2563eb; color: white; }
+        .nav-link.nav-green { color: #15803d; background: #f0fdf4; border-color: #dcfce7; } .nav-link.nav-green:hover { background: #16a34a; color: white; }
+
+        /* Advice Boxes */
+        .advice-box { border-left-width: 8px; padding: 1.25rem; border-radius: 0.75rem; margin-bottom: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); animation: popIn 0.3s ease-out; }
+        .advice-red { background-color: #fef2f2; border-color: #dc2626; color: #991b1b; }
+        .advice-orange { background-color: #fff7ed; border-color: #ea580c; color: #9a3412; }
+        .advice-blue { background-color: #eff6ff; border-color: #2563eb; color: #1e40af; }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-900 antialiased pb-20">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-slate-300">
+        <div class="container mx-auto px-4 py-2">
+            <div class="flex justify-between items-center mb-2">
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 bg-blue-800 rounded flex items-center justify-center text-white font-black text-xs shadow-sm">NHS</div>
+                    <div>
+                        <h1 class="text-lg md:text-xl font-black text-slate-900 leading-tight">Back Pain Assessment <span class="text-[10px] font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border align-middle ml-1">BHH/GHH v22.5.25</span></h1>
+                        <p class="text-[10px] text-green-600 font-bold flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Auto-save Active
+                        </p>
+                    </div>
+                </div>
+                <button id="resetData" class="px-3 py-1 text-[10px] font-bold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded transition uppercase">Reset Form</button>
+            </div>
+
+            <nav class="flex flex-wrap items-center gap-1.5 md:gap-2 pb-1">
+                <a href="#sec-details" class="nav-link bg-slate-50 border-slate-200">ID</a>
+                <span class="w-px h-4 bg-slate-300 mx-0.5"></span>
+                <a href="#sec-redflags" class="nav-link nav-red">Red Flags</a>
+                <a href="#sec-ces" class="nav-link nav-red">CES</a>
+                <a href="#sec-history" class="nav-link nav-blue">Hx</a>
+                <a href="#sec-exam" class="nav-link nav-blue">Exam</a>
+                <a href="#sec-neuro" class="nav-link nav-blue">Neuro</a>
+                <span class="w-px h-4 bg-slate-300 mx-0.5"></span>
+                <a href="#sec-plan" class="nav-link nav-green">Plan</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- LEFT COLUMN: INPUTS -->
+            <div class="lg:col-span-7 xl:col-span-8 flex flex-col space-y-6">
+
+                <!-- PRO FORMA ADVICE BANNER (Top) -->
+                <div id="proFormaAdviceTop" class="hidden"></div>
+
+                <!-- Patient Details -->
+                <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-400" id="sec-details">
+                    <h2 class="text-lg font-bold text-slate-900 mb-3">Patient Details</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div class="col-span-2"><input type="text" id="ptName" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium" placeholder="Patient Name"></div>
+                        <div><input type="text" id="ptHosp" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium" placeholder="Hosp No."></div>
+                        <div><input type="date" id="ptDob" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium"></div>
+                        <div class="col-span-2 md:col-span-2 grid grid-cols-2 gap-2">
+                            <input type="date" id="assessmentDate" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium">
+                            <input type="time" id="assessmentTime" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- History: General Red Flags -->
+                <section class="bg-white p-5 rounded-xl shadow-sm border-2 border-slate-300 border-l-[8px] border-l-red-600" id="sec-redflags">
+                    <h3 class="text-xl font-black text-red-700 mb-4">General History (Malignancy/Infection)</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-3">
+                        <button type="button" class="flag-btn px-4 py-3 border rounded-lg text-sm font-bold text-left flex items-center justify-between" data-flag="Cancer">
+                            <span>History of Cancer</span><span class="w-4 h-4 rounded-full border border-red-200 bg-white check-indicator"></span>
+                        </button>
+                        <button type="button" class="flag-btn px-4 py-3 border rounded-lg text-sm font-bold text-left flex items-center justify-between" data-flag="Weight Loss">
+                            <span>Unexplained Weight Loss</span><span class="w-4 h-4 rounded-full border border-red-200 bg-white check-indicator"></span>
+                        </button>
+                        <button type="button" class="flag-btn px-4 py-3 border rounded-lg text-sm font-bold text-left flex items-center justify-between" data-flag="Immunosuppression">
+                            <span>Immunosuppression</span><span class="w-4 h-4 rounded-full border border-red-200 bg-white check-indicator"></span>
+                        </button>
+                        <button type="button" class="flag-btn px-4 py-3 border rounded-lg text-sm font-bold text-left flex items-center justify-between" data-flag="Steroids">
+                            <span>Prolonged Steroids</span><span class="w-4 h-4 rounded-full border border-red-200 bg-white check-indicator"></span>
+                        </button>
+                        <button type="button" class="flag-btn px-4 py-3 border rounded-lg text-sm font-bold text-left flex items-center justify-between" data-flag="IVDU">
+                            <span>Intravenous Drug Use</span><span class="w-4 h-4 rounded-full border border-red-200 bg-white check-indicator"></span>
+                        </button>
+                        <button type="button" class="flag-btn px-4 py-3 border rounded-lg text-sm font-bold text-left flex items-center justify-between" data-flag="Pain Rest">
+                            <span>Pain not relieved by rest</span><span class="w-4 h-4 rounded-full border border-red-200 bg-white check-indicator"></span>
+                        </button>
+                    </div>
+                    <div class="hidden p-3 bg-red-50 border border-red-200 rounded text-xs text-red-900 font-medium" id="bloods_advice">
+                        ⚠️ <strong>ACTION:</strong> Request Bloods (FBC, ESR, CRP, U&Es, Creatinine, Liver, Bone). Consider UHB MSCC Guidelines.
+                    </div>
+                </section>
+
+                <!-- History: CES -->
+                <section class="bg-white p-5 rounded-xl shadow-sm border-2 border-slate-300 border-l-[8px] border-l-orange-500" id="sec-ces">
+                    <h3 class="text-xl font-black text-orange-700 mb-2">Cauda Equina Syndrome Screen</h3>
+                    <p class="text-xs text-slate-500 mb-4">Suspect CES if any of the following are present:</p>
+                    
+                    <div class="space-y-2 mb-4">
+                        <label class="flex items-center space-x-3 p-3 bg-orange-50 border border-orange-200 rounded-lg cursor-pointer hover:bg-orange-100 transition">
+                            <input type="checkbox" id="ces_urine" class="w-5 h-5 text-orange-600 rounded border-gray-400 focus:ring-orange-500">
+                            <span class="font-bold text-orange-900 text-sm">Difficulty initiating micturition or impaired sensation</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-3 bg-orange-50 border border-orange-200 rounded-lg cursor-pointer hover:bg-orange-100 transition">
+                            <input type="checkbox" id="ces_rectal" class="w-5 h-5 text-orange-600 rounded border-gray-400 focus:ring-orange-500">
+                            <span class="font-bold text-orange-900 text-sm">Loss of sensation of rectal fullness</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-3 bg-orange-50 border border-orange-200 rounded-lg cursor-pointer hover:bg-orange-100 transition">
+                            <input type="checkbox" id="ces_saddle" class="w-5 h-5 text-orange-600 rounded border-gray-400 focus:ring-orange-500">
+                            <span class="font-bold text-orange-900 text-sm">Altered perianal, perineal or genital sensation</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-3 bg-orange-50 border border-orange-200 rounded-lg cursor-pointer hover:bg-orange-100 transition">
+                            <input type="checkbox" id="ces_sex" class="w-5 h-5 text-orange-600 rounded border-gray-400 focus:ring-orange-500">
+                            <span class="font-bold text-orange-900 text-sm">Sexual dysfunction (erection/ejaculation/vaginal sensation)</span>
+                        </label>
+                    </div>
+
+                    <div id="ces_logic_container" class="hidden animate-fade-in border-t border-orange-200 pt-4">
+                        <p class="text-xs font-black text-slate-600 uppercase mb-2">Symptom Duration (Mandatory)</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="ces_duration" value="emergency" class="peer sr-only">
+                                <div class="p-3 border-2 rounded-lg text-center text-sm font-bold text-slate-500 border-slate-300 peer-checked:bg-red-600 peer-checked:text-white peer-checked:border-red-800 transition">
+                                    &le; 14 Days OR Deteriorating
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="ces_duration" value="clinic" class="peer sr-only">
+                                <div class="p-3 border-2 rounded-lg text-center text-sm font-bold text-slate-500 border-slate-300 peer-checked:bg-sky-600 peer-checked:text-white peer-checked:border-sky-800 transition">
+                                    &ge; 15 Days AND Stable
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Other History -->
+                <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-400" id="sec-history">
+                    <h2 class="text-lg font-bold text-slate-900 mb-3">Specific Back Pain History</h2>
+                    
+                    <div class="space-y-3">
+                        <div class="p-3 border border-slate-300 rounded-lg bg-slate-50">
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="hx_sciatica" class="w-5 h-5 text-blue-600 rounded border-gray-400">
+                                <div>
+                                    <span class="font-bold text-slate-800 text-sm block">Sudden onset bilateral sciatic / radicular pain</span>
+                                    <span class="text-xs text-slate-500">Or unilateral pain progressed to bilateral</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="p-3 border border-slate-300 rounded-lg bg-slate-50">
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="hx_fracture" class="w-5 h-5 text-blue-600 rounded border-gray-400">
+                                <div>
+                                    <span class="font-bold text-slate-800 text-sm block">Suspected Spinal Fracture</span>
+                                    <span class="text-xs text-slate-500">Trauma related to age OR fragility fracture (Osteoporosis/Elderly)</span>
+                                </div>
+                            </label>
+                            <div class="mt-2 text-xs text-blue-800 font-bold hidden pl-8" id="fracture_advice">
+                                ACTION: X-Ray or CT. Consider MRI if neuro deficit. Discuss with Senior (ST4+).
+                            </div>
+                        </div>
+
+                        <div class="p-3 border border-slate-300 rounded-lg bg-slate-50">
+                             <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="hx_chronic" class="w-5 h-5 text-blue-600 rounded border-gray-400">
+                                <div>
+                                    <span class="font-bold text-slate-800 text-sm block">Neurological findings persisting &gt; 6 weeks</span>
+                                    <span class="text-xs text-slate-500">Without red flags (mild weakness 4/5 or 5/5) OR Sciatic leg pain reproduced by passive SLR</span>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="p-3 border border-slate-300 rounded-lg bg-slate-50">
+                             <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="hx_immobile" class="w-5 h-5 text-blue-600 rounded border-gray-400">
+                                <span class="font-bold text-slate-800 text-sm">New onset severe pain AND unable to mobilise independently</span>
+                            </label>
+                        </div>
+                    </div>
+                    <textarea id="hx_notes" rows="2" class="w-full px-3 py-2 mt-4 border border-slate-400 rounded-md text-sm font-medium" placeholder="Additional History notes..."></textarea>
+                </section>
+
+                <!-- Examination: General -->
+                <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-400" id="sec-exam">
+                    <h2 class="text-lg font-bold text-slate-900 mb-3">Examination: General</h2>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Temperature</label>
+                            <div class="relative">
+                                <input type="number" id="ex_temp" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-bold" placeholder="36.5">
+                                <span class="absolute right-3 top-2 text-slate-500 text-sm">°C</span>
+                            </div>
+                        </div>
+                        <div class="flex items-end pb-2">
+                            <div class="text-xs text-slate-500 leading-tight">If > 37.8°C with spinal pain, consider infection/discitis.</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                         <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Abdomen</label>
+                         <input type="text" id="ex_abdomen" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium" placeholder="Check for palpable bladder / masses">
+                    </div>
+                    
+                    <div class="space-y-2">
+                         <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="ex_saddle" class="w-5 h-5 text-red-600 rounded border-gray-400">
+                                <span class="font-bold text-red-900 text-sm">Saddle Anaesthesia / Paraesthesia</span>
+                            </label>
+                        </div>
+                         <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="ex_severe_motor" class="w-5 h-5 text-red-600 rounded border-gray-400">
+                                <span class="font-bold text-red-900 text-sm">Severe/Progressive Motor Deficit (Grade 3 or less)</span>
+                            </label>
+                        </div>
+                        <div class="p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="ex_hypertonia" class="w-5 h-5 text-orange-600 rounded border-gray-400">
+                                <span class="font-bold text-orange-900 text-sm">Hypertonia in legs / UMN signs</span>
+                            </label>
+                        </div>
+                        <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                             <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="ex_tender" class="w-5 h-5 text-yellow-600 rounded border-gray-400">
+                                <div>
+                                    <span class="font-bold text-yellow-900 text-sm block">Non-traumatic Vertebral Tenderness on percussion</span>
+                                    <span class="text-xs text-yellow-800">AND X-Ray is abnormal</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Detailed Neurology Grid -->
+                <section class="bg-white p-5 rounded-xl shadow-sm border-2 border-slate-300 border-l-[8px] border-l-blue-600" id="sec-neuro">
+                    <h2 class="text-xl font-black text-blue-800 mb-4">Neurology Assessment</h2>
+                    
+                    <!-- SLR -->
+                    <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                             <p class="text-xs font-black text-blue-900 uppercase">Passive SLR</p>
+                             <label class="flex items-center space-x-2 cursor-pointer bg-white px-2 py-1 rounded border border-blue-200">
+                                <input type="checkbox" id="slr_positive" class="text-blue-600 rounded">
+                                <span class="text-xs font-bold text-blue-800">SLR Positive?</span>
+                             </label>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-sm w-10">Right</span>
+                                <input type="number" id="slr_r" class="w-full px-2 py-1 border border-blue-300 rounded text-sm font-bold" placeholder="deg">
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-sm w-10">Left</span>
+                                <input type="number" id="slr_l" class="w-full px-2 py-1 border border-blue-300 rounded text-sm font-bold" placeholder="deg">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tone -->
+                     <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 mb-4">
+                        <p class="text-xs font-black text-slate-600 uppercase mb-2">Leg Tone</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase mb-1">Right</label>
+                                <select id="tone_r" class="w-full text-xs border rounded p-1 font-bold">
+                                    <option value="Normal">Normal</option>
+                                    <option value="Increased">Increased (Hypertonia)</option>
+                                    <option value="Decreased">Decreased</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase mb-1">Left</label>
+                                <select id="tone_l" class="w-full text-xs border rounded p-1 font-bold">
+                                    <option value="Normal">Normal</option>
+                                    <option value="Increased">Increased (Hypertonia)</option>
+                                    <option value="Decreased">Decreased</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Power Grid -->
+                    <div class="mb-5 overflow-x-auto">
+                        <p class="text-xs font-black text-slate-600 uppercase mb-2">Power (L2-S1)</p>
+                        <table class="w-full text-sm border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-600 text-xs uppercase">
+                                    <th class="p-2 text-left border border-slate-200">Level / Action</th>
+                                    <th class="p-2 w-20 border border-slate-200 text-center">Right</th>
+                                    <th class="p-2 w-20 border border-slate-200 text-center">Left</th>
+                                </tr>
+                            </thead>
+                            <tbody id="power_grid_body">
+                                <!-- JS Generated -->
+                            </tbody>
+                        </table>
+                        <p class="text-[10px] text-slate-400 mt-1 italic font-medium">0=Paralysis, 1=Flicker, 2=Grav Elim, 3=Anti-Grav, 4=Resistance, 5=Normal</p>
+                    </div>
+
+                    <!-- Sensation Grid -->
+                    <div class="mb-5 overflow-x-auto">
+                        <p class="text-xs font-black text-slate-600 uppercase mb-2">Sensation (L1-S4)</p>
+                        <table class="w-full text-sm border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-600 text-xs uppercase">
+                                    <th class="p-2 text-left border border-slate-200">Dermatome</th>
+                                    <th class="p-2 w-20 border border-slate-200 text-center">Right</th>
+                                    <th class="p-2 w-20 border border-slate-200 text-center">Left</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sens_grid_body">
+                                <!-- JS Generated -->
+                            </tbody>
+                        </table>
+                        <p class="text-[10px] text-slate-400 mt-1 italic font-medium">N=Normal, Red=Reduced, Inc=Increased, Abs=Absent</p>
+                    </div>
+
+                    <!-- Reflexes & PR -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                            <p class="text-xs font-black text-slate-600 uppercase mb-2">Reflexes</p>
+                            <div class="space-y-2">
+                                <div class="grid grid-cols-3 gap-1 items-center">
+                                    <span class="text-xs font-bold">Knee (L3/4)</span>
+                                    <select id="ref_knee_r" class="text-xs border rounded"><option value="-">-</option><option value="Normal">Normal</option><option value="Reduced">Reduced</option><option value="Absent">Absent</option><option value="Brisk">Brisk</option></select>
+                                    <select id="ref_knee_l" class="text-xs border rounded"><option value="-">-</option><option value="Normal">Normal</option><option value="Reduced">Reduced</option><option value="Absent">Absent</option><option value="Brisk">Brisk</option></select>
+                                </div>
+                                <div class="grid grid-cols-3 gap-1 items-center">
+                                    <span class="text-xs font-bold">Ankle (L5/S1)</span>
+                                    <select id="ref_ank_r" class="text-xs border rounded"><option value="-">-</option><option value="Normal">Normal</option><option value="Reduced">Reduced</option><option value="Absent">Absent</option><option value="Brisk">Brisk</option></select>
+                                    <select id="ref_ank_l" class="text-xs border rounded"><option value="-">-</option><option value="Normal">Normal</option><option value="Reduced">Reduced</option><option value="Absent">Absent</option><option value="Brisk">Brisk</option></select>
+                                </div>
+                                <div class="grid grid-cols-3 gap-1 items-center">
+                                    <span class="text-xs font-bold">Plantar (UMN)</span>
+                                    <select id="ref_pl_r" class="text-xs border rounded"><option value="-">-</option><option value="Down">Down</option><option value="Up">Up</option><option value="Equiv">Equiv</option></select>
+                                    <select id="ref_pl_l" class="text-xs border rounded"><option value="-">-</option><option value="Down">Down</option><option value="Up">Up</option><option value="Equiv">Equiv</option></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                            <p class="text-xs font-black text-slate-600 uppercase mb-2">PR Exam</p>
+                            <div class="mb-2">
+                                <label class="block text-xs font-bold mb-1">PR Sensation</label>
+                                <select id="pr_sens" class="w-full text-xs border rounded p-1 font-bold">
+                                    <option value="Not Tested">Not Tested</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Reduced">Reduced</option>
+                                    <option value="Absent">Absent</option>
+                                    <option value="Increased">Increased</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold mb-1">PR Tone</label>
+                                <select id="pr_tone" class="w-full text-xs border rounded p-1 font-bold">
+                                    <option value="Not Tested">Not Tested</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Reduced">Reduced</option>
+                                    <option value="Absent">Absent</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- Plan -->
+                <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-400" id="sec-plan">
+                    <h2 class="text-lg font-bold text-slate-900 mb-3">Plan & Disposition</h2>
+                    
+                    <textarea id="plan_notes" rows="4" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium mb-4" placeholder="Management Plan..."></textarea>
+
+                    <p class="text-xs font-black text-slate-700 uppercase mb-2">Disposition</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                            <button class="std-btn px-4 py-2 border rounded text-xs font-bold" data-disp="Discharge">Discharge</button>
+                            <button class="std-btn px-4 py-2 border rounded text-xs font-bold" data-disp="Spinal Clinic">Spinal Clinic (Oceano)</button>
+                            <button class="std-btn px-4 py-2 border rounded text-xs font-bold" data-disp="T&O">T&O Referral</button>
+                            <button class="std-btn px-4 py-2 border rounded text-xs font-bold" data-disp="Neurosurg">Neurosurgery</button>
+                            <button class="std-btn px-4 py-2 border rounded text-xs font-bold" data-disp="Admit">Admit</button>
+                    </div>
+                </section>
+                
+                <!-- PRO FORMA ADVICE BANNER (Bottom) -->
+                <div id="proFormaAdviceBottom" class="hidden mt-6"></div>
+
+                <section class="bg-slate-200 p-4 rounded-lg text-xs text-slate-600 mt-6">
+                    <p class="font-bold">Links / Resources:</p>
+                    <p>Cauda Equina Patient Info (Multi-language): <a href="http://www.macpweb.org/learning-resources/cauda-equina-information-cards.aspx" target="_blank" class="text-blue-600 underline">macpweb.org</a></p>
+                </section>
+
+                <footer class="mt-8 py-8 text-center border-t border-slate-300">
+                    <p class="text-xs text-slate-500 font-bold mb-1">University Hospitals Birmingham NHS Foundation Trust</p>
+                    <p class="text-[10px] text-slate-400">Based on BHH/GHH ED Back Pain Assessment 22.5.25</p>
+                </footer>
+            </div>
+
+            <!-- RIGHT COLUMN: OUTPUT -->
+            <div class="lg:col-span-5 xl:col-span-4 relative">
+                <div class="sticky top-24 space-y-6">
+                    <section class="bg-white p-4 rounded-xl shadow-lg border border-slate-300">
+                        <div class="flex justify-between items-center mb-3">
+                            <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wide">Live Note</h2>
+                            <button id="copyNote" class="px-3 py-1 text-xs font-bold bg-blue-600 text-white rounded hover:bg-blue-700 transition shadow-sm">Copy</button>
+                        </div>
+                        <div id="noteOutput" contenteditable="true" class="rich-output focus:ring-2 ring-blue-500 ring-offset-2"></div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- CONSTANTS ---
+            const powerLevels = [
+                { id: 'l2', label: 'L2 (Hip Flex)' },
+                { id: 'l3', label: 'L3 (Knee Ext)' },
+                { id: 'l4', label: 'L4 (Foot DF)' },
+                { id: 'l5', label: 'L5 (Toe DF)' },
+                { id: 's1k', label: 'S1 (Knee Flex)' },
+                { id: 's1p', label: 'S1 (Plant Flex)' }
+            ];
+
+            const sensLevels = [
+                { id: 'l1', label: 'L1 (Groin)' },
+                { id: 'l2', label: 'L2 (Lat Thigh)' },
+                { id: 'l3', label: 'L3 (Med Thigh)' },
+                { id: 'l4', label: 'L4 (Inside Calf)' },
+                { id: 'l5', label: 'L5 (Outside Calf)' },
+                { id: 's1', label: 'S1 (Lat Foot)' },
+                { id: 's2', label: 'S2 (Back Thigh)' },
+                { id: 's3', label: 'S3 (Gluteus)' },
+                { id: 's4', label: 'S4 (Perianal)' }
+            ];
+
+            // --- STATE ---
+            let data = {
+                pt: { name:'', hosp:'', dob:'', date:'', time:'' },
+                flags: [],
+                ces: { urine: false, rectal: false, saddle: false, sex: false, duration: '', rec: '' },
+                hx: { sciatica: false, chronic: false, fracture: false, immobile: false, notes: '' },
+                exam: { temp: '', abdomen: '', saddle: false, severe_motor: false, hypertonia: false, tender: false },
+                neuro: { slr_r: '', slr_l: '', slr_pos: false, tone_r: 'Normal', tone_l: 'Normal', power: {}, sens: {}, reflex: {}, pr: {sens:'Not Tested', tone:'Not Tested'} },
+                plan: { notes: '', disp: '', generatedAdvice: [] }
+            };
+
+            // --- BUILD GRIDS ---
+            const pBody = document.getElementById('power_grid_body');
+            powerLevels.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-2 border border-slate-200 font-bold text-slate-700">${p.label}</td>
+                    <td class="p-2 border border-slate-200 neuro-cell"><select data-type="power" data-side="r" data-lvl="${p.id}">${genOpts(5)}</select></td>
+                    <td class="p-2 border border-slate-200 neuro-cell"><select data-type="power" data-side="l" data-lvl="${p.id}">${genOpts(5)}</select></td>
+                `;
+                pBody.appendChild(tr);
+            });
+
+            const sBody = document.getElementById('sens_grid_body');
+            sensLevels.forEach(s => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-2 border border-slate-200 font-bold text-slate-700">${s.label}</td>
+                    <td class="p-2 border border-slate-200 neuro-cell"><select data-type="sens" data-side="r" data-lvl="${s.id}">${genSensOpts()}</select></td>
+                    <td class="p-2 border border-slate-200 neuro-cell"><select data-type="sens" data-side="l" data-lvl="${s.id}">${genSensOpts()}</select></td>
+                `;
+                sBody.appendChild(tr);
+            });
+
+            function genOpts(max) {
+                let h = '<option value="5">5</option>';
+                for(let i=4; i>=0; i--) h += `<option value="${i}">${i}</option>`;
+                return h;
+            }
+
+            function genSensOpts() {
+                return '<option value="Normal">N</option><option value="Reduced">Red</option><option value="Absent">Abs</option><option value="Increased">Inc</option>';
+            }
+
+            // Defaults
+            document.getElementById('assessmentDate').valueAsDate = new Date();
+            document.getElementById('assessmentTime').value = new Date().toTimeString().slice(0,5);
+            data.pt.date = document.getElementById('assessmentDate').value;
+            data.pt.time = document.getElementById('assessmentTime').value;
+
+            // --- LOAD & INIT ---
+            loadState();
+            setupListeners();
+            updateAll();
+
+            // --- CORE LOGIC ---
+
+            function updateAll() {
+                // 1. CES Toggle
+                const hasCesSx = data.ces.urine || data.ces.rectal || data.ces.saddle || data.ces.sex;
+                document.getElementById('ces_logic_container').classList.toggle('hidden', !hasCesSx);
+
+                // 2. Logic Engine
+                runLogicEngine();
+
+                // 3. Render Note
+                renderNote();
+
+                saveState();
+            }
+
+            function runLogicEngine() {
+                const adviceDivTop = document.getElementById('proFormaAdviceTop');
+                const adviceDivBottom = document.getElementById('proFormaAdviceBottom');
+                let advices = [];
+                let level = 'none'; // none, routine, urgent, critical
+
+                // A. EMERGENCY PROTOCOL (Red)
+                // Trigger 1: CES Symptoms + (Emergency Duration)
+                const cesEmerg = (data.ces.urine || data.ces.rectal || data.ces.saddle || data.ces.sex) && (data.ces.duration === 'emergency');
+                
+                // Trigger 2: Saddle Anaesthesia (Exam)
+                // Trigger 3: Severe Motor Deficit (Grade <= 3) (Exam check or Calculated)
+                const calcSevereMotor = checkSevereMotor();
+                const motorEmerg = data.exam.severe_motor || calcSevereMotor;
+
+                if (cesEmerg || data.exam.saddle || motorEmerg) {
+                    level = 'critical';
+                    let reason = [];
+                    if(cesEmerg) reason.push("CES Symptoms (Acute/Deteriorating)");
+                    if(data.exam.saddle) reason.push("Saddle Anaesthesia");
+                    if(motorEmerg) reason.push("Severe Motor Deficit (Grade \u2264 3)");
+
+                    advices.push({
+                        type: 'red',
+                        title: '🚨 EMERGENCY MRI PROTOCOL',
+                        text: `
+                            <ul class="list-decimal ml-4 text-sm font-bold">
+                                <li>Keep patient on clear fluids only.</li>
+                                <li>Arrange bladder scan and catheterise if post void residual > 600ml.</li>
+                                <li>Arrange MRI (within 4 hours if lumbar only - CES sequences).</li>
+                                <li>After 19:30, transfer to QEHB for MRI (as per current practice).</li>
+                                <li>ED contact Neurosurgery QEHB via NORSE.</li>
+                                <li>Admit under Local T&O to follow-up MRI results.</li>
+                            </ul>
+                            <div class="mt-2 text-xs italic">Triggers: ${reason.join(', ')}</div>
+                        `
+                    });
+                }
+
+                // B. URGENT / SENIOR REVIEW (Orange)
+                // Trigger: Fever > 37.8
+                if(data.exam.temp && parseFloat(data.exam.temp) > 37.8) {
+                    advices.push({
+                        type: 'orange',
+                        title: '⚠️ FEVER (>37.8°C)',
+                        text: `Consider spinal infection/discitis.<br>Discuss with ED Senior (ST4+). Consider imaging.`
+                    });
+                }
+                
+                // Trigger: Hypertonia
+                if(data.exam.hypertonia) {
+                    advices.push({
+                        type: 'orange',
+                        title: '⚠️ HYPERTONIA / UMN SIGNS',
+                        text: `Consider malignancy.<br>Discuss with ED Senior. Consider Whole Spine MRI + Head MRI (Agree time, not <4h target). Neurology opinion.`
+                    });
+                }
+
+                // Trigger: Vertebral Tenderness + Abnormal X-Ray
+                if(data.exam.tender) {
+                    advices.push({
+                        type: 'orange',
+                        title: '⚠️ VERTEBRAL TENDERNESS (+ Abnormal X-Ray)',
+                        text: `Discuss with Senior (ST4+). Consider imaging.`
+                    });
+                }
+
+                // Trigger: Fracture Suspected
+                if(data.hx.fracture) {
+                    advices.push({
+                        type: 'orange',
+                        title: '⚠️ SUSPECTED FRACTURE',
+                        text: `X-Ray or CT. Consider MRI if neuro deficit.<br>Discuss with Senior (ST4+).`
+                    });
+                }
+
+                // Trigger: Immobile
+                if(data.hx.immobile) {
+                    advices.push({
+                        type: 'orange',
+                        title: '⚠️ SEVERE PAIN + IMMOBILE',
+                        text: `A > M > D (Analgesia > Mobilise > Discharge).<br>If unable: Refer T&O.`
+                    });
+                }
+
+                // C. ROUTINE / SPINAL CLINIC (Blue)
+                // Trigger: CES Stable > 15 days
+                if ((data.ces.urine || data.ces.rectal || data.ces.saddle || data.ces.sex) && data.ces.duration === 'clinic') {
+                     advices.push({
+                        type: 'blue',
+                        title: 'ℹ️ SPINAL CLINIC (Stable CES Symptoms)',
+                        text: `Refer to Spinal Assessment Clinic (SAC) using Oceano discharge option.<br>Safety net about progressive signs.`
+                    });
+                }
+                // Trigger: Bilateral Sciatica
+                if (data.hx.sciatica) {
+                     advices.push({
+                        type: 'blue',
+                        title: 'ℹ️ SPINAL CLINIC (Bilateral Sciatica)',
+                        text: `Refer to Spinal Assessment Clinic.`
+                    });
+                }
+                // Trigger: Chronic Neuro (>6w)
+                if (data.hx.chronic) {
+                     advices.push({
+                        type: 'blue',
+                        title: 'ℹ️ SPINAL CLINIC (Neuro > 6 Weeks)',
+                        text: `Refer to Spinal Assessment Clinic.`
+                    });
+                }
+                 // Trigger: Positive SLR + Sciatica (Inferred from PDF logic)
+                if (data.neuro.slr_pos) {
+                     advices.push({
+                        type: 'blue',
+                        title: 'ℹ️ SPINAL CLINIC (Positive SLR)',
+                        text: `Refer to Spinal Assessment Clinic.`
+                    });
+                }
+
+                // Store Generated Advice in Data
+                data.plan.generatedAdvice = advices;
+
+                // Render Advice DOM (Top & Bottom)
+                if(advices.length > 0) {
+                    const html = advices.map(a => `
+                        <div class="advice-box advice-${a.type}">
+                            <h4 class="font-black uppercase text-sm mb-1">${a.title}</h4>
+                            <div class="text-sm font-medium leading-relaxed">${a.text}</div>
+                        </div>
+                    `).join('');
+                    
+                    adviceDivTop.innerHTML = html;
+                    adviceDivTop.classList.remove('hidden');
+                    
+                    adviceDivBottom.innerHTML = html;
+                    adviceDivBottom.classList.remove('hidden');
+                } else {
+                    adviceDivTop.classList.add('hidden');
+                    adviceDivTop.innerHTML = '';
+                    
+                    adviceDivBottom.classList.add('hidden');
+                    adviceDivBottom.innerHTML = '';
+                }
+            }
+
+            function checkSevereMotor() {
+                for (const key in data.neuro.power) {
+                    if (parseInt(data.neuro.power[key]) <= 3) return true;
+                }
+                return false;
+            }
+
+            function renderNote() {
+                let t = `<strong>Low Back Pain Assessment (BHH/GHH)</strong>\n`;
+                t += `Date: ${data.pt.date} ${data.pt.time}\n`;
+                if(data.pt.name) t += `Patient: ${data.pt.name} (${data.pt.hosp})\n`;
+                
+                // Red Flags
+                t += `\n<strong>History & Red Flags</strong>\n`;
+                if(data.flags.length === 0) t += "No general red flags reported.\n";
+                else t += `⚠️ POSITIVE FLAGS: ${data.flags.join(', ')}.\n`;
+                
+                if(data.hx.sciatica) t += "- Sudden onset bilateral/progressing sciatica.\n";
+                if(data.hx.chronic) t += "- Chronic Neuro findings (>6 weeks, stable).\n";
+                if(data.hx.fracture) t += "- Suspected Spinal Fracture (Trauma/Osteoporosis).\n";
+                if(data.hx.immobile) t += "- New onset severe pain + Immobile.\n";
+                if(data.hx.notes) t += `Notes: ${data.hx.notes}\n`;
+
+                // CES
+                t += `\n<strong>Cauda Equina Screen</strong>\n`;
+                const cesSx = [];
+                if(data.ces.urine) cesSx.push("Bladder Dysfunction");
+                if(data.ces.rectal) cesSx.push("Loss of Rectal Sensation");
+                if(data.ces.saddle) cesSx.push("Altered Saddle Sensation");
+                if(data.ces.sex) cesSx.push("Sexual Dysfunction");
+                
+                if(cesSx.length === 0) t += "Negative for CES symptoms.\n";
+                else {
+                    t += `⚠️ POSITIVE CES SYMPTOMS: ${cesSx.join(', ')}.\n`;
+                    if(data.ces.duration === 'emergency') t += "Duration: <14 Days / Deteriorating -> Emergency Protocol.\n";
+                    else if(data.ces.duration === 'clinic') t += "Duration: >15 Days & Stable -> Spinal Clinic.\n";
+                    else t += "Duration not specified.\n";
+                }
+
+                // General Exam
+                t += `\n<strong>Examination</strong>\n`;
+                if(data.exam.temp) t += `Temp: ${data.exam.temp}°C. `;
+                if(data.exam.abdomen) t += `Abdomen: ${data.exam.abdomen}. `;
+                t += "\n";
+                if(data.exam.saddle) t += "⚠️ Saddle Anaesthesia Present.\n";
+                if(data.exam.severe_motor) t += "⚠️ Severe Motor Deficit (Grade <=3).\n";
+                if(data.exam.hypertonia) t += "⚠️ Hypertonia/UMN signs present.\n";
+                if(data.exam.tender) t += "⚠️ Vertebral Tenderness (+Abnormal Xray).\n";
+
+                // Neuro
+                t += `\n<strong>Neurology</strong>\n`;
+                t += `SLR: R ${data.neuro.slr_r || '-'}° | L ${data.neuro.slr_l || '-'}°`;
+                if(data.neuro.slr_pos) t += " (Positive)";
+                t += "\n";
+                
+                t += `Tone: R:${data.neuro.tone_r} L:${data.neuro.tone_l}\n`;
+
+                t += "Power (R/L): ";
+                let pTxt = [];
+                powerLevels.forEach(l => {
+                    const r = data.neuro.power[`r_${l.id}`] || '-';
+                    const left = data.neuro.power[`l_${l.id}`] || '-';
+                    if(r !== '5' || left !== '5') pTxt.push(`${l.label} ${r}/${left}`);
+                });
+                t += pTxt.length ? pTxt.join(', ') : "5/5 throughout";
+                t += "\n";
+
+                t += "Sensation (R/L): ";
+                let sTxt = [];
+                let abnormalSens = false;
+                sensLevels.forEach(l => {
+                    const r = data.neuro.sens[`r_${l.id}`] || 'Normal';
+                    const left = data.neuro.sens[`l_${l.id}`] || 'Normal';
+                    if(r !== 'Normal' || left !== 'Normal') {
+                        sTxt.push(`${l.label} ${r}/${left}`);
+                        abnormalSens = true;
+                    }
+                });
+                t += abnormalSens ? sTxt.join(', ') : "Normal throughout";
+                t += "\n";
+                
+                t += "Reflexes (R/L): ";
+                t += `Knee ${data.neuro.reflex.k_r||'-'}/${data.neuro.reflex.k_l||'-'} | `;
+                t += `Ankle ${data.neuro.reflex.a_r||'-'}/${data.neuro.reflex.a_l||'-'} | `;
+                t += `Plantar ${data.neuro.reflex.p_r||'-'}/${data.neuro.reflex.p_l||'-'}\n`;
+                
+                t += `PR: Sensation: ${data.neuro.pr.sens} | Tone: ${data.neuro.pr.tone}\n`;
+
+                // Plan
+                t += `\n<strong>Plan</strong>\n`;
+                // Add Generated Advice Full Text
+                if (data.plan.generatedAdvice && data.plan.generatedAdvice.length > 0) {
+                    t += `PRO FORMA GUIDANCE:\n`;
+                    data.plan.generatedAdvice.forEach(a => {
+                        t += `[${a.title}] \n`;
+                        // Simple strip tags for text output
+                        let txt = a.text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+                        t += `${txt}\n`;
+                    });
+                    t += `\n`;
+                }
+
+                if(data.flags.length > 0) t += "Inv: Bloods (FBC/UE/LFT/CRP/ESR/Bone)\n";
+                if(data.hx.fracture) t += "Inv: CT/X-Ray Spine\n";
+                if(data.plan.disp) t += `Disposition: ${data.plan.disp}\n`;
+                if(data.plan.notes) t += `${data.plan.notes}\n`;
+
+                document.getElementById('noteOutput').innerHTML = t;
+            }
+
+            function setupListeners() {
+                // Inputs
+                ['ptName','ptHosp','ptDob','assessmentDate','assessmentTime','hx_notes','ex_temp','ex_abdomen','slr_r','slr_l','plan_notes'].forEach(id => {
+                    document.getElementById(id).addEventListener('input', (e) => {
+                         if(id==='ptName') data.pt.name=e.target.value;
+                         if(id==='ptHosp') data.pt.hosp=e.target.value;
+                         if(id==='ptDob') data.pt.dob=e.target.value;
+                         if(id==='assessmentDate') data.pt.date=e.target.value;
+                         if(id==='assessmentTime') data.pt.time=e.target.value;
+                         
+                         if(id==='hx_notes') data.hx.notes = e.target.value;
+                         if(id==='plan_notes') data.plan.notes = e.target.value;
+                         if(id==='ex_temp') data.exam.temp = e.target.value;
+                         if(id==='ex_abdomen') data.exam.abdomen = e.target.value;
+                         if(id.startsWith('slr')) data.neuro[id] = e.target.value;
+
+                        updateAll();
+                    });
+                });
+
+                // Flags
+                document.querySelectorAll('.flag-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        btn.classList.toggle('active');
+                        const f = btn.dataset.flag;
+                        if(data.flags.includes(f)) data.flags = data.flags.filter(x => x !== f);
+                        else data.flags.push(f);
+                        
+                        const alert = document.getElementById('bloods_advice');
+                        if(data.flags.length > 0) alert.classList.remove('hidden');
+                        else alert.classList.add('hidden');
+                        
+                        updateAll();
+                    });
+                });
+
+                // Checkboxes
+                const chkMap = {
+                    'ces_urine': ['ces','urine'], 'ces_rectal': ['ces','rectal'], 'ces_saddle': ['ces','saddle'], 'ces_sex': ['ces','sex'],
+                    'hx_sciatica': ['hx','sciatica'], 'hx_fracture': ['hx','fracture'], 'hx_chronic': ['hx','chronic'], 'hx_immobile': ['hx','immobile'],
+                    'ex_saddle': ['exam','saddle'], 'ex_hypertonia': ['exam','hypertonia'], 'ex_tender': ['exam','tender'], 'ex_severe_motor': ['exam', 'severe_motor'],
+                    'slr_positive': ['neuro','slr_pos']
+                };
+                for(let id in chkMap) {
+                    document.getElementById(id).addEventListener('change', (e) => {
+                        data[chkMap[id][0]][chkMap[id][1]] = e.target.checked;
+                        updateAll();
+                    });
+                }
+
+                // Radios
+                document.querySelectorAll('input[name="ces_duration"]').forEach(r => {
+                    r.addEventListener('change', (e) => {
+                        data.ces.duration = e.target.value;
+                        updateAll();
+                    });
+                });
+
+                // Selects
+                document.getElementById('sec-neuro').addEventListener('change', (e) => {
+                    if(e.target.tagName === 'SELECT') {
+                        const t = e.target.dataset.type;
+                        if(t === 'power' || t === 'sens') {
+                            const key = `${e.target.dataset.side}_${e.target.dataset.lvl}`;
+                            data.neuro[t][key] = e.target.value;
+                        }
+                        updateAll();
+                    }
+                });
+                
+                // Tone
+                document.getElementById('tone_r').addEventListener('change', e => { data.neuro.tone_r = e.target.value; updateAll(); });
+                document.getElementById('tone_l').addEventListener('change', e => { data.neuro.tone_l = e.target.value; updateAll(); });
+
+                // Reflexes
+                ['ref_knee_r','ref_knee_l','ref_ank_r','ref_ank_l','ref_pl_r','ref_pl_l'].forEach(id => {
+                    document.getElementById(id).addEventListener('change', (e) => {
+                        const k = id.replace('ref_','').replace('_r','_r').replace('_l','_l').replace('knee','k').replace('ank','a').replace('pl','p');
+                        data.neuro.reflex[k] = e.target.value;
+                        updateAll();
+                    });
+                });
+
+                // PR
+                document.getElementById('pr_sens').addEventListener('change', e => { data.neuro.pr.sens = e.target.value; updateAll(); });
+                document.getElementById('pr_tone').addEventListener('change', e => { data.neuro.pr.tone = e.target.value; updateAll(); });
+
+                // Dispo
+                document.querySelectorAll('[data-disp]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('[data-disp]').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        data.plan.disp = btn.dataset.disp;
+                        updateAll();
+                    });
+                });
+
+                // Copy
+                document.getElementById('copyNote').addEventListener('click', async () => {
+                    const el = document.getElementById('noteOutput');
+                    await navigator.clipboard.writeText(el.innerText);
+                    const btn = document.getElementById('copyNote');
+                    const orig = btn.innerText;
+                    btn.innerText = "✅";
+                    setTimeout(() => btn.innerText = orig, 1000);
+                });
+
+                // Reset
+                document.getElementById('resetData').addEventListener('click', () => {
+                    if(confirm("Clear all data?")) {
+                        localStorage.removeItem('bhh_back_pain_data_v3');
+                        location.reload();
+                    }
+                });
+            }
+
+            function saveState() {
+                localStorage.setItem('bhh_back_pain_data_v3', JSON.stringify(data));
+            }
+
+            function loadState() {
+                const s = localStorage.getItem('bhh_back_pain_data_v3');
+                if(s) {
+                    try {
+                        const saved = JSON.parse(s);
+                        data = { ...data, ...saved };
+                        
+                        // Inputs
+                        document.getElementById('ptName').value = data.pt.name;
+                        document.getElementById('ptHosp').value = data.pt.hosp;
+                        document.getElementById('ptDob').value = data.pt.dob;
+                        document.getElementById('assessmentDate').value = data.pt.date;
+                        document.getElementById('assessmentTime').value = data.pt.time;
+                        document.getElementById('hx_notes').value = data.hx.notes;
+                        document.getElementById('ex_temp').value = data.exam.temp;
+                        document.getElementById('ex_abdomen').value = data.exam.abdomen;
+                        document.getElementById('slr_r').value = data.neuro.slr_r;
+                        document.getElementById('slr_l').value = data.neuro.slr_l;
+                        document.getElementById('tone_r').value = data.neuro.tone_r;
+                        document.getElementById('tone_l').value = data.neuro.tone_l;
+                        document.getElementById('plan_notes').value = data.plan.notes;
+
+                        // Flags
+                        data.flags.forEach(f => {
+                            const btn = document.querySelector(`button[data-flag="${f}"]`);
+                            if(btn) btn.classList.add('active');
+                        });
+                        if(data.flags.length>0) document.getElementById('bloods_advice').classList.remove('hidden');
+
+                        // Checkboxes
+                        const chkMap = {
+                            'ces_urine': data.ces.urine, 'ces_rectal': data.ces.rectal, 'ces_saddle': data.ces.saddle, 'ces_sex': data.ces.sex,
+                            'hx_sciatica': data.hx.sciatica, 'hx_fracture': data.hx.fracture, 'hx_chronic': data.hx.chronic, 'hx_immobile': data.hx.immobile,
+                            'ex_saddle': data.exam.saddle, 'ex_hypertonia': data.exam.hypertonia, 'ex_tender': data.exam.tender, 'ex_severe_motor': data.exam.severe_motor,
+                            'slr_positive': data.neuro.slr_pos
+                        };
+                        for(let id in chkMap) {
+                            const el = document.getElementById(id);
+                            if(el) el.checked = chkMap[id];
+                        }
+
+                        // Radios
+                        if(data.ces.duration) {
+                            const r = document.querySelector(`input[name="ces_duration"][value="${data.ces.duration}"]`);
+                            if(r) r.checked = true;
+                        }
+
+                        // Selects
+                        document.querySelectorAll('select[data-type]').forEach(sel => {
+                            const t = sel.dataset.type;
+                            const key = `${sel.dataset.side}_${sel.dataset.lvl}`;
+                            if(data.neuro[t] && data.neuro[t][key]) sel.value = data.neuro[t][key];
+                        });
+                         ['k_r','k_l','a_r','a_l','p_r','p_l'].forEach(k => {
+                            const domId = k.replace('k_','ref_knee_').replace('a_','ref_ank_').replace('p_','ref_pl_');
+                            if(data.neuro.reflex[k]) document.getElementById(domId).value = data.neuro.reflex[k];
+                        });
+                        document.getElementById('pr_sens').value = data.neuro.pr.sens;
+                        document.getElementById('pr_tone').value = data.neuro.pr.tone;
+
+                        if(data.plan.disp) {
+                            const btn = document.querySelector(`button[data-disp="${data.plan.disp}"]`);
+                            if(btn) btn.classList.add('active');
+                        }
+
+                    } catch(e) { console.error(e); }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
