@@ -75,6 +75,33 @@
         .advice-orange { background-color: #fff7ed; border-color: #ea580c; color: #9a3412; }
         .advice-blue { background-color: #eff6ff; border-color: #2563eb; color: #1e40af; }
         
+        /* Guide / Education Boxes */
+        .guide-box {
+            display: none;
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            color: #0c4a6e;
+        }
+        .guide-box h4 { font-weight: 800; margin-bottom: 0.5rem; text-transform: uppercase; font-size: 0.75rem; }
+        .guide-box p { margin-bottom: 0.5rem; }
+        .guide-box ul { list-style-type: disc; margin-left: 1.2rem; margin-bottom: 0.5rem; }
+        .guide-btn {
+            font-size: 0.7rem;
+            background-color: #e0f2fe;
+            color: #0284c7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-left: 8px;
+            border: 1px solid #bae6fd;
+        }
+        .guide-btn:hover { background-color: #bae6fd; }
+
         @keyframes popIn {
             0% { transform: scale(0.95); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
@@ -89,7 +116,7 @@
                 <div class="flex items-center gap-3">
                     <div class="h-10 w-10 bg-blue-800 rounded flex items-center justify-center text-white font-black text-xs shadow-sm">NHS</div>
                     <div>
-                        <h1 class="text-lg md:text-xl font-black text-slate-900 leading-tight">Back Pain Assessment <span class="text-[10px] font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border align-middle ml-1">BHH/GHH v22.5.25</span></h1>
+                        <h1 class="text-lg md:text-xl font-black text-slate-900 leading-tight">Back Pain Assessment <span class="text-[10px] font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border align-middle ml-1">BHH/GHH v26.0</span></h1>
                         <p class="text-[10px] text-green-600 font-bold flex items-center gap-1">
                             <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Auto-save Active
                         </p>
@@ -115,19 +142,19 @@
     <main class="container mx-auto px-4 py-6">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- LEFT COLUMN: INPUTS -->
             <div class="lg:col-span-7 xl:col-span-8 flex flex-col space-y-6">
 
-                <!-- PRO FORMA ADVICE BANNER (Top) -->
                 <div id="proFormaAdviceTop" class="hidden"></div>
 
-                <!-- Patient Details -->
                 <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-400" id="sec-details">
                     <h2 class="text-lg font-bold text-slate-900 mb-3">Patient Details</h2>
+                    <div class="bg-yellow-50 border border-yellow-200 p-2 rounded mb-3 text-xs text-yellow-800 font-bold">
+                        NOTE: Patient Name and DOB will NOT be copied to the EPR note for privacy.
+                    </div>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div class="col-span-2"><input type="text" id="ptName" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium" placeholder="Patient Name"></div>
+                        <div class="col-span-2"><input type="text" id="ptName" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium" placeholder="Patient Name (Not copied)"></div>
                         <div><input type="text" id="ptHosp" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium" placeholder="Hosp No."></div>
-                        <div><input type="date" id="ptDob" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium"></div>
+                        <div><input type="date" id="ptDob" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium" title="DOB (Not copied)"></div>
                         <div class="col-span-2 md:col-span-2 grid grid-cols-2 gap-2">
                             <input type="date" id="assessmentDate" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium">
                             <input type="time" id="assessmentTime" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium">
@@ -135,7 +162,6 @@
                     </div>
                 </section>
 
-                <!-- History: General Red Flags -->
                 <section class="bg-white p-5 rounded-xl shadow-sm border-2 border-slate-300 border-l-[8px] border-l-red-600" id="sec-redflags">
                     <h3 class="text-xl font-black text-red-700 mb-4">General History (Malignancy/Infection)</h3>
                     
@@ -164,9 +190,23 @@
                     </div>
                 </section>
 
-                <!-- History: CES -->
                 <section class="bg-white p-5 rounded-xl shadow-sm border-2 border-slate-300 border-l-[8px] border-l-orange-500" id="sec-ces">
-                    <h3 class="text-xl font-black text-orange-700 mb-2">Cauda Equina Syndrome Screen</h3>
+                    <div class="flex items-center gap-2 mb-2">
+                        <h3 class="text-xl font-black text-orange-700">Cauda Equina Syndrome Screen</h3>
+                        <button type="button" class="guide-btn" onclick="toggleGuide('guide-ces')">? GUIDE</button>
+                    </div>
+
+                    <div id="guide-ces" class="guide-box">
+                        <h4>Assessing Cauda Equina Syndrome (CES)</h4>
+                        <p>Ask specifically about subjective changes in function. Symptoms are often vague in early stages (CESI - Incomplete).</p>
+                        <ul>
+                            <li><strong>Bladder:</strong> Difficulty initiating flow, poor stream, loss of sensation of flow, or incontinence (late sign).</li>
+                            <li><strong>Bowels:</strong> Incontinence or loss of sensation of rectal fullness/passing wind.</li>
+                            <li><strong>Sexual Function:</strong> Change in erection/ejaculation or vaginal sensation.</li>
+                            <li><strong>Saddle Sensation:</strong> Numbness when wiping or sitting.</li>
+                        </ul>
+                    </div>
+
                     <p class="text-xs text-slate-500 mb-4">Suspect CES if any of the following are present:</p>
                     
                     <div class="space-y-2 mb-4">
@@ -207,7 +247,6 @@
                     </div>
                 </section>
 
-                <!-- Other History -->
                 <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-400" id="sec-history">
                     <h2 class="text-lg font-bold text-slate-900 mb-3">Specific Back Pain History</h2>
                     
@@ -255,7 +294,6 @@
                     <textarea id="hx_notes" rows="2" class="w-full px-3 py-2 mt-4 border border-slate-400 rounded-md text-sm font-medium" placeholder="Additional History notes..."></textarea>
                 </section>
 
-                <!-- Examination: General -->
                 <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-400" id="sec-exam">
                     <h2 class="text-lg font-bold text-slate-900 mb-3">Examination: General</h2>
                     
@@ -308,19 +346,37 @@
                     </div>
                 </section>
 
-                <!-- Detailed Neurology Grid -->
                 <section class="bg-white p-5 rounded-xl shadow-sm border-2 border-slate-300 border-l-[8px] border-l-blue-600" id="sec-neuro">
                     <h2 class="text-xl font-black text-blue-800 mb-4">Neurology Assessment</h2>
                     
-                    <!-- SLR -->
                     <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 mb-4">
                         <div class="flex justify-between items-center mb-2">
-                             <p class="text-xs font-black text-blue-900 uppercase">Passive SLR</p>
+                             <div class="flex items-center gap-2">
+                                <p class="text-xs font-black text-blue-900 uppercase">Passive SLR</p>
+                                <button type="button" class="guide-btn" onclick="toggleGuide('guide-slr')">? GUIDE</button>
+                             </div>
                              <label class="flex items-center space-x-2 cursor-pointer bg-white px-2 py-1 rounded border border-blue-200">
                                 <input type="checkbox" id="slr_positive" class="text-blue-600 rounded">
                                 <span class="text-xs font-bold text-blue-800">SLR Positive?</span>
                              </label>
                         </div>
+
+                        <div id="guide-slr" class="guide-box">
+                            <h4>Straight Leg Raise Test (L4-S1 Nerve Root Tension)</h4>
+                            <div class="flex flex-col md:flex-row gap-4">
+                                <div class="flex-1">
+                                    <p><strong>Goal:</strong> Test for mechanical tension of the lumbosacral nerve roots.</p>
+                                    <p><strong>Technique:</strong> Patient supine. Passive hip flexion with knee extended.</p>
+                                    <p><strong>Positive Result:</strong> Reproduction of patient's <em>familiar</em> leg pain (radicular) between 30-70° of elevation. Back pain alone is negative.</p>
+                                    <p><strong>Sensitisation:</strong> If pain occurs, lower leg slightly until pain eases, then Dorsiflex foot. Return of pain confirms neural tissue origin.</p>
+                                </div>
+                                <div class="w-32 flex-shrink-0">
+                                    <img src="images/slr_test.png" alt="SLR Test" class="w-full h-auto rounded border border-slate-300 bg-white" onerror="this.style.display='none'">
+                                    <div class="text-[10px] text-center text-slate-400 mt-1">Image: images/slr_test.png</div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="grid grid-cols-2 gap-4">
                             <div class="flex items-center gap-2">
                                 <span class="font-bold text-sm w-10">Right</span>
@@ -333,8 +389,7 @@
                         </div>
                     </div>
 
-                    <!-- Tone -->
-                     <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 mb-4">
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 mb-4">
                         <p class="text-xs font-black text-slate-600 uppercase mb-2">Leg Tone</p>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
@@ -356,9 +411,30 @@
                         </div>
                     </div>
 
-                    <!-- Power Grid -->
                     <div class="mb-5 overflow-x-auto">
-                        <p class="text-xs font-black text-slate-600 uppercase mb-2">Power (L2-S1)</p>
+                        <div class="flex items-center gap-2 mb-2">
+                            <p class="text-xs font-black text-slate-600 uppercase">Power (L2-S1)</p>
+                            <button type="button" class="guide-btn" onclick="toggleGuide('guide-power')">? GUIDE</button>
+                        </div>
+                        
+                        <div id="guide-power" class="guide-box">
+                             <h4>Myotomes Testing Guide</h4>
+                             <div class="flex flex-col md:flex-row gap-4">
+                                <div class="flex-1">
+                                    <ul>
+                                        <li><strong>L2:</strong> Hip Flexion (Iliopsoas) - "Lift knee to chest against resistance"</li>
+                                        <li><strong>L3:</strong> Knee Extension (Quadriceps) - "Straighten leg against resistance"</li>
+                                        <li><strong>L4:</strong> Ankle Dorsiflexion (Tibialis Anterior) - "Pull foot up"</li>
+                                        <li><strong>L5:</strong> Great Toe Extension (EHL) - "Pull big toe up"</li>
+                                        <li><strong>S1:</strong> Ankle Plantarflexion/Eversion - "Push foot down like a pedal"</li>
+                                    </ul>
+                                </div>
+                                <div class="w-32 flex-shrink-0">
+                                     <img src="images/motor_exam.png" alt="Motor Exam" class="w-full h-auto rounded border border-slate-300 bg-white" onerror="this.style.display='none'">
+                                </div>
+                             </div>
+                        </div>
+
                         <table class="w-full text-sm border-collapse">
                             <thead>
                                 <tr class="bg-slate-100 text-slate-600 text-xs uppercase">
@@ -368,15 +444,39 @@
                                 </tr>
                             </thead>
                             <tbody id="power_grid_body">
-                                <!-- JS Generated -->
-                            </tbody>
+                                </tbody>
                         </table>
                         <p class="text-[10px] text-slate-400 mt-1 italic font-medium">0=Paralysis, 1=Flicker, 2=Grav Elim, 3=Anti-Grav, 4=Resistance, 5=Normal</p>
                     </div>
 
-                    <!-- Sensation Grid -->
                     <div class="mb-5 overflow-x-auto">
-                        <p class="text-xs font-black text-slate-600 uppercase mb-2">Sensation (L1-S4)</p>
+                        <div class="flex items-center gap-2 mb-2">
+                             <p class="text-xs font-black text-slate-600 uppercase">Sensation (L1-S4)</p>
+                             <button type="button" class="guide-btn" onclick="toggleGuide('guide-sens')">? GUIDE</button>
+                        </div>
+                        
+                        <div id="guide-sens" class="guide-box">
+                            <h4>Dermatome Landmarks (ASIA Points)</h4>
+                            <div class="flex flex-col md:flex-row gap-4">
+                                <div class="flex-1">
+                                    <ul>
+                                        <li><strong>L1:</strong> Upper anterior thigh (Inguinal)</li>
+                                        <li><strong>L2:</strong> Mid-anterior thigh</li>
+                                        <li><strong>L3:</strong> Medial femoral condyle (knee)</li>
+                                        <li><strong>L4:</strong> Medial malleolus</li>
+                                        <li><strong>L5:</strong> Dorsum of foot at 3rd MTP joint</li>
+                                        <li><strong>S1:</strong> Lateral heel</li>
+                                        <li><strong>S2:</strong> Midline popliteal fossa</li>
+                                        <li><strong>S3:</strong> Ischial tuberosity</li>
+                                        <li><strong>S4-5:</strong> Perianal area</li>
+                                    </ul>
+                                </div>
+                                <div class="w-48 flex-shrink-0">
+                                     <img src="ASIA_sensory_points.png" alt="ASIA Sensory Points" class="w-full h-auto rounded border border-slate-300 bg-white">
+                                </div>
+                            </div>
+                        </div>
+
                         <table class="w-full text-sm border-collapse">
                             <thead>
                                 <tr class="bg-slate-100 text-slate-600 text-xs uppercase">
@@ -386,16 +486,26 @@
                                 </tr>
                             </thead>
                             <tbody id="sens_grid_body">
-                                <!-- JS Generated -->
-                            </tbody>
+                                </tbody>
                         </table>
                         <p class="text-[10px] text-slate-400 mt-1 italic font-medium">N=Normal, Red=Reduced, Inc=Increased, Abs=Absent</p>
                     </div>
 
-                    <!-- Reflexes & PR -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-slate-50 p-3 rounded border border-slate-200">
-                            <p class="text-xs font-black text-slate-600 uppercase mb-2">Reflexes</p>
+                            <div class="flex items-center justify-between mb-2">
+                                <p class="text-xs font-black text-slate-600 uppercase">Reflexes</p>
+                                <button type="button" class="guide-btn" onclick="toggleGuide('guide-reflex')">?</button>
+                            </div>
+                            
+                            <div id="guide-reflex" class="guide-box">
+                                <h4>Reflex Testing</h4>
+                                <p><strong>Knee Jerk (L3/4):</strong> Tap patellar tendon.</p>
+                                <p><strong>Ankle Jerk (S1):</strong> Dorsiflex foot slightly, tap Achilles.</p>
+                                <p><strong>Plantar (Babinski):</strong> Stroke lateral sole heel to toe. <br>Normal = Flexion (Down). <br>Abnormal (UMN) = Extension/Fanning (Up).</p>
+                                <img src="images/reflexes.png" alt="Reflex Zones" class="w-full h-auto rounded border border-slate-300 bg-white mt-2" onerror="this.style.display='none'">
+                            </div>
+
                             <div class="space-y-2">
                                 <div class="grid grid-cols-3 gap-1 items-center">
                                     <span class="text-xs font-bold">Knee (L3/4)</span>
@@ -441,7 +551,6 @@
 
                 </section>
 
-                <!-- Plan -->
                 <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-400" id="sec-plan">
                     <h2 class="text-lg font-bold text-slate-900 mb-3">Plan & Disposition</h2>
                     
@@ -457,21 +566,20 @@
                     </div>
                 </section>
                 
-                <!-- PRO FORMA ADVICE BANNER (Bottom) -->
                 <div id="proFormaAdviceBottom" class="hidden mt-6"></div>
 
                 <section class="bg-slate-200 p-4 rounded-lg text-xs text-slate-600 mt-6">
                     <p class="font-bold">Links / Resources:</p>
                     <p>Cauda Equina Patient Info (Multi-language): <a href="http://www.macpweb.org/learning-resources/cauda-equina-information-cards.aspx" target="_blank" class="text-blue-600 underline">macpweb.org</a></p>
+                    <p>Physio-pedia SLR: <a href="https://www.physio-pedia.com/Straight_Leg_Raise_Test" target="_blank" class="text-blue-600 underline">physio-pedia.com</a></p>
                 </section>
 
                 <footer class="mt-8 py-8 text-center border-t border-slate-300">
                     <p class="text-xs text-slate-500 font-bold mb-1">University Hospitals Birmingham NHS Foundation Trust</p>
-                    <p class="text-[10px] text-slate-400">Based on BHH/GHH ED Back Pain Assessment 22.5.25</p>
+                    <p class="text-[10px] text-slate-400">Based on BHH/GHH ED Back Pain Assessment 26.0</p>
                 </footer>
             </div>
 
-            <!-- RIGHT COLUMN: OUTPUT -->
             <div class="lg:col-span-5 xl:col-span-4 relative">
                 <div class="sticky top-24 space-y-6">
                     <section class="bg-white p-4 rounded-xl shadow-lg border border-slate-300">
@@ -487,6 +595,13 @@
     </main>
 
     <script>
+        // Global Toggle Function for Guides
+        function toggleGuide(id) {
+            const el = document.getElementById(id);
+            if(el.style.display === 'block') el.style.display = 'none';
+            else el.style.display = 'block';
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             // --- CONSTANTS ---
             const powerLevels = [
@@ -588,11 +703,7 @@
                 let level = 'none'; // none, routine, urgent, critical
 
                 // A. EMERGENCY PROTOCOL (Red)
-                // Trigger 1: CES Symptoms + (Emergency Duration)
                 const cesEmerg = (data.ces.urine || data.ces.rectal || data.ces.saddle || data.ces.sex) && (data.ces.duration === 'emergency');
-                
-                // Trigger 2: Saddle Anaesthesia (Exam)
-                // Trigger 3: Severe Motor Deficit (Grade <= 3) (Exam check or Calculated)
                 const calcSevereMotor = checkSevereMotor();
                 const motorEmerg = data.exam.severe_motor || calcSevereMotor;
 
@@ -621,89 +732,43 @@
                 }
 
                 // B. URGENT / SENIOR REVIEW (Orange)
-                // Trigger: Fever > 37.8
                 if(data.exam.temp && parseFloat(data.exam.temp) > 37.8) {
-                    advices.push({
-                        type: 'orange',
-                        title: '⚠️ FEVER (>37.8°C)',
-                        text: `Consider spinal infection/discitis.<br>Discuss with ED Senior (ST4+). Consider imaging.`
-                    });
+                    advices.push({ type: 'orange', title: '⚠️ FEVER (>37.8°C)', text: `Consider spinal infection/discitis.<br>Discuss with ED Senior (ST4+). Consider imaging.` });
                 }
                 
-                // Trigger: Hypertonia
                 if(data.exam.hypertonia) {
-                    advices.push({
-                        type: 'orange',
-                        title: '⚠️ HYPERTONIA / UMN SIGNS',
-                        text: `Consider malignancy.<br>Discuss with ED Senior. Consider Whole Spine MRI + Head MRI (Agree time, not <4h target). Neurology opinion.`
-                    });
+                    advices.push({ type: 'orange', title: '⚠️ HYPERTONIA / UMN SIGNS', text: `Consider malignancy.<br>Discuss with ED Senior. Consider Whole Spine MRI + Head MRI (Agree time, not <4h target). Neurology opinion.` });
                 }
 
-                // Trigger: Vertebral Tenderness + Abnormal X-Ray
                 if(data.exam.tender) {
-                    advices.push({
-                        type: 'orange',
-                        title: '⚠️ VERTEBRAL TENDERNESS (+ Abnormal X-Ray)',
-                        text: `Discuss with Senior (ST4+). Consider imaging.`
-                    });
+                    advices.push({ type: 'orange', title: '⚠️ VERTEBRAL TENDERNESS (+ Abnormal X-Ray)', text: `Discuss with Senior (ST4+). Consider imaging.` });
                 }
 
-                // Trigger: Fracture Suspected
                 if(data.hx.fracture) {
-                    advices.push({
-                        type: 'orange',
-                        title: '⚠️ SUSPECTED FRACTURE',
-                        text: `X-Ray or CT. Consider MRI if neuro deficit.<br>Discuss with Senior (ST4+).`
-                    });
+                    advices.push({ type: 'orange', title: '⚠️ SUSPECTED FRACTURE', text: `X-Ray or CT. Consider MRI if neuro deficit.<br>Discuss with Senior (ST4+).` });
                 }
 
-                // Trigger: Immobile
                 if(data.hx.immobile) {
-                    advices.push({
-                        type: 'orange',
-                        title: '⚠️ SEVERE PAIN + IMMOBILE',
-                        text: `A > M > D (Analgesia > Mobilise > Discharge).<br>If unable: Refer T&O.`
-                    });
+                    advices.push({ type: 'orange', title: '⚠️ SEVERE PAIN + IMMOBILE', text: `A > M > D (Analgesia > Mobilise > Discharge).<br>If unable: Refer T&O.` });
                 }
 
                 // C. ROUTINE / SPINAL CLINIC (Blue)
-                // Trigger: CES Stable > 15 days
                 if ((data.ces.urine || data.ces.rectal || data.ces.saddle || data.ces.sex) && data.ces.duration === 'clinic') {
-                     advices.push({
-                        type: 'blue',
-                        title: 'ℹ️ SPINAL CLINIC (Stable CES Symptoms)',
-                        text: `Refer to Spinal Assessment Clinic (SAC) using Oceano discharge option.<br>Safety net about progressive signs.`
-                    });
+                     advices.push({ type: 'blue', title: 'ℹ️ SPINAL CLINIC (Stable CES Symptoms)', text: `Refer to Spinal Assessment Clinic (SAC) using Oceano discharge option.<br>Safety net about progressive signs.` });
                 }
-                // Trigger: Bilateral Sciatica
                 if (data.hx.sciatica) {
-                     advices.push({
-                        type: 'blue',
-                        title: 'ℹ️ SPINAL CLINIC (Bilateral Sciatica)',
-                        text: `Refer to Spinal Assessment Clinic.`
-                    });
+                     advices.push({ type: 'blue', title: 'ℹ️ SPINAL CLINIC (Bilateral Sciatica)', text: `Refer to Spinal Assessment Clinic.` });
                 }
-                // Trigger: Chronic Neuro (>6w)
                 if (data.hx.chronic) {
-                     advices.push({
-                        type: 'blue',
-                        title: 'ℹ️ SPINAL CLINIC (Neuro > 6 Weeks)',
-                        text: `Refer to Spinal Assessment Clinic.`
-                    });
+                     advices.push({ type: 'blue', title: 'ℹ️ SPINAL CLINIC (Neuro > 6 Weeks)', text: `Refer to Spinal Assessment Clinic.` });
                 }
-                 // Trigger: Positive SLR + Sciatica (Inferred from PDF logic)
                 if (data.neuro.slr_pos) {
-                     advices.push({
-                        type: 'blue',
-                        title: 'ℹ️ SPINAL CLINIC (Positive SLR)',
-                        text: `Refer to Spinal Assessment Clinic.`
-                    });
+                     advices.push({ type: 'blue', title: 'ℹ️ SPINAL CLINIC (Positive SLR)', text: `Refer to Spinal Assessment Clinic.` });
                 }
 
-                // Store Generated Advice in Data
                 data.plan.generatedAdvice = advices;
 
-                // Render Advice DOM (Top & Bottom)
+                // Render Advice DOM
                 if(advices.length > 0) {
                     const html = advices.map(a => `
                         <div class="advice-box advice-${a.type}">
@@ -712,17 +777,11 @@
                         </div>
                     `).join('');
                     
-                    adviceDivTop.innerHTML = html;
-                    adviceDivTop.classList.remove('hidden');
-                    
-                    adviceDivBottom.innerHTML = html;
-                    adviceDivBottom.classList.remove('hidden');
+                    adviceDivTop.innerHTML = html; adviceDivTop.classList.remove('hidden');
+                    adviceDivBottom.innerHTML = html; adviceDivBottom.classList.remove('hidden');
                 } else {
-                    adviceDivTop.classList.add('hidden');
-                    adviceDivTop.innerHTML = '';
-                    
-                    adviceDivBottom.classList.add('hidden');
-                    adviceDivBottom.innerHTML = '';
+                    adviceDivTop.classList.add('hidden'); adviceDivTop.innerHTML = '';
+                    adviceDivBottom.classList.add('hidden'); adviceDivBottom.innerHTML = '';
                 }
             }
 
@@ -734,19 +793,24 @@
             }
 
             function renderNote() {
+                // START NOTE GENERATION
                 let t = `<strong>Low Back Pain Assessment (BHH/GHH)</strong>\n`;
                 t += `Date: ${data.pt.date} ${data.pt.time}\n`;
-                if(data.pt.name) t += `Patient: ${data.pt.name} (${data.pt.hosp})\n`;
+                
+                // IMPORTANT: Name and DOB are deliberately EXCLUDED as per instruction
+                if(data.pt.hosp) t += `Hosp No: ${data.pt.hosp}\n`;
                 
                 // Red Flags
                 t += `\n<strong>History & Red Flags</strong>\n`;
-                if(data.flags.length === 0) t += "No general red flags reported.\n";
+                if(data.flags.length === 0) t += "No general red flags reported (No Hx Cancer, Weight loss, IVDU, Steroids, Immunosuppression).\n";
                 else t += `⚠️ POSITIVE FLAGS: ${data.flags.join(', ')}.\n`;
                 
                 if(data.hx.sciatica) t += "- Sudden onset bilateral/progressing sciatica.\n";
                 if(data.hx.chronic) t += "- Chronic Neuro findings (>6 weeks, stable).\n";
                 if(data.hx.fracture) t += "- Suspected Spinal Fracture (Trauma/Osteoporosis).\n";
                 if(data.hx.immobile) t += "- New onset severe pain + Immobile.\n";
+                
+                // Always add Hx Notes if present, or state 'No additonal notes' to ensure field is captured
                 if(data.hx.notes) t += `Notes: ${data.hx.notes}\n`;
 
                 // CES
@@ -770,7 +834,7 @@
                 if(data.exam.temp) t += `Temp: ${data.exam.temp}°C. `;
                 if(data.exam.abdomen) t += `Abdomen: ${data.exam.abdomen}. `;
                 t += "\n";
-                if(data.exam.saddle) t += "⚠️ Saddle Anaesthesia Present.\n";
+                if(data.exam.saddle) t += "⚠️ Saddle Anaesthesia Present.\n"; else t += "No Saddle Anaesthesia.\n";
                 if(data.exam.severe_motor) t += "⚠️ Severe Motor Deficit (Grade <=3).\n";
                 if(data.exam.hypertonia) t += "⚠️ Hypertonia/UMN signs present.\n";
                 if(data.exam.tender) t += "⚠️ Vertebral Tenderness (+Abnormal Xray).\n";
@@ -778,7 +842,7 @@
                 // Neuro
                 t += `\n<strong>Neurology</strong>\n`;
                 t += `SLR: R ${data.neuro.slr_r || '-'}° | L ${data.neuro.slr_l || '-'}°`;
-                if(data.neuro.slr_pos) t += " (Positive)";
+                if(data.neuro.slr_pos) t += " (Positive)"; else t += " (Negative)";
                 t += "\n";
                 
                 t += `Tone: R:${data.neuro.tone_r} L:${data.neuro.tone_l}\n`;
@@ -788,10 +852,11 @@
                 powerLevels.forEach(l => {
                     const r = data.neuro.power[`r_${l.id}`] || '-';
                     const left = data.neuro.power[`l_${l.id}`] || '-';
+                    // Capture ALL readings, not just abnormal, to ensure full documentation
                     if(r !== '5' || left !== '5') pTxt.push(`${l.label} ${r}/${left}`);
                 });
-                t += pTxt.length ? pTxt.join(', ') : "5/5 throughout";
-                t += "\n";
+                if (pTxt.length === 0) t += "5/5 throughout (L2-S1)\n";
+                else t += pTxt.join(', ') + "\n";
 
                 t += "Sensation (R/L): ";
                 let sTxt = [];
@@ -804,7 +869,7 @@
                         abnormalSens = true;
                     }
                 });
-                t += abnormalSens ? sTxt.join(', ') : "Normal throughout";
+                t += abnormalSens ? sTxt.join(', ') : "Normal throughout (L1-S4)";
                 t += "\n";
                 
                 t += "Reflexes (R/L): ";
@@ -816,12 +881,10 @@
 
                 // Plan
                 t += `\n<strong>Plan</strong>\n`;
-                // Add Generated Advice Full Text
                 if (data.plan.generatedAdvice && data.plan.generatedAdvice.length > 0) {
                     t += `PRO FORMA GUIDANCE:\n`;
                     data.plan.generatedAdvice.forEach(a => {
                         t += `[${a.title}] \n`;
-                        // Simple strip tags for text output
                         let txt = a.text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
                         t += `${txt}\n`;
                     });
@@ -946,18 +1009,18 @@
                 // Reset
                 document.getElementById('resetData').addEventListener('click', () => {
                     if(confirm("Clear all data?")) {
-                        localStorage.removeItem('bhh_back_pain_data_v3');
+                        localStorage.removeItem('bhh_back_pain_data_v26');
                         location.reload();
                     }
                 });
             }
 
             function saveState() {
-                localStorage.setItem('bhh_back_pain_data_v3', JSON.stringify(data));
+                localStorage.setItem('bhh_back_pain_data_v26', JSON.stringify(data));
             }
 
             function loadState() {
-                const s = localStorage.getItem('bhh_back_pain_data_v3');
+                const s = localStorage.getItem('bhh_back_pain_data_v26');
                 if(s) {
                     try {
                         const saved = JSON.parse(s);
