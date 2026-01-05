@@ -116,7 +116,7 @@
                 <div class="flex items-center gap-3">
                     <div class="h-10 w-10 bg-blue-800 rounded flex items-center justify-center text-white font-black text-xs shadow-sm">NHS</div>
                     <div>
-                        <h1 class="text-lg md:text-xl font-black text-slate-900 leading-tight">Back Pain Assessment <span class="text-[10px] font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border align-middle ml-1">BHH/GHH v26.0</span></h1>
+                        <h1 class="text-lg md:text-xl font-black text-slate-900 leading-tight">Back Pain Assessment <span class="text-[10px] font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border align-middle ml-1">BHH/GHH v26.1</span></h1>
                         <p class="text-[10px] text-green-600 font-bold flex items-center gap-1">
                             <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Auto-save Active
                         </p>
@@ -147,14 +147,8 @@
                 <div id="proFormaAdviceTop" class="hidden"></div>
 
                 <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-400" id="sec-details">
-                    <h2 class="text-lg font-bold text-slate-900 mb-3">Patient Details</h2>
-                    <div class="bg-yellow-50 border border-yellow-200 p-2 rounded mb-3 text-xs text-yellow-800 font-bold">
-                        NOTE: Patient Name and DOB will NOT be copied to the EPR note for privacy.
-                    </div>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div class="col-span-2"><input type="text" id="ptName" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium" placeholder="Patient Name (Not copied)"></div>
-                        <div><input type="text" id="ptHosp" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium" placeholder="Hosp No."></div>
-                        <div><input type="date" id="ptDob" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium" title="DOB (Not copied)"></div>
+                    <h2 class="text-lg font-bold text-slate-900 mb-3">Assessment Timestamp</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-2 gap-3">
                         <div class="col-span-2 md:col-span-2 grid grid-cols-2 gap-2">
                             <input type="date" id="assessmentDate" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium">
                             <input type="time" id="assessmentTime" class="w-full px-3 py-2 border border-slate-400 rounded-md text-sm font-medium">
@@ -576,7 +570,7 @@
 
                 <footer class="mt-8 py-8 text-center border-t border-slate-300">
                     <p class="text-xs text-slate-500 font-bold mb-1">University Hospitals Birmingham NHS Foundation Trust</p>
-                    <p class="text-[10px] text-slate-400">Based on BHH/GHH ED Back Pain Assessment 26.0</p>
+                    <p class="text-[10px] text-slate-400">Based on BHH/GHH ED Back Pain Assessment 26.1</p>
                 </footer>
             </div>
 
@@ -627,7 +621,7 @@
 
             // --- STATE ---
             let data = {
-                pt: { name:'', hosp:'', dob:'', date:'', time:'' },
+                pt: { date:'', time:'' },
                 flags: [],
                 ces: { urine: false, rectal: false, saddle: false, sex: false, duration: '', rec: '' },
                 hx: { sciatica: false, chronic: false, fracture: false, immobile: false, notes: '' },
@@ -752,18 +746,20 @@
                     advices.push({ type: 'orange', title: '⚠️ SEVERE PAIN + IMMOBILE', text: `A > M > D (Analgesia > Mobilise > Discharge).<br>If unable: Refer T&O.` });
                 }
 
-                // C. ROUTINE / SPINAL CLINIC (Blue)
-                if ((data.ces.urine || data.ces.rectal || data.ces.saddle || data.ces.sex) && data.ces.duration === 'clinic') {
-                     advices.push({ type: 'blue', title: 'ℹ️ SPINAL CLINIC (Stable CES Symptoms)', text: `Refer to Spinal Assessment Clinic (SAC) using Oceano discharge option.<br>Safety net about progressive signs.` });
-                }
-                if (data.hx.sciatica) {
-                     advices.push({ type: 'blue', title: 'ℹ️ SPINAL CLINIC (Bilateral Sciatica)', text: `Refer to Spinal Assessment Clinic.` });
-                }
-                if (data.hx.chronic) {
-                     advices.push({ type: 'blue', title: 'ℹ️ SPINAL CLINIC (Neuro > 6 Weeks)', text: `Refer to Spinal Assessment Clinic.` });
-                }
-                if (data.neuro.slr_pos) {
-                     advices.push({ type: 'blue', title: 'ℹ️ SPINAL CLINIC (Positive SLR)', text: `Refer to Spinal Assessment Clinic.` });
+                // C. ROUTINE / SPINAL CLINIC (Blue) - ONLY ADD IF NOT CRITICAL
+                if (level !== 'critical') {
+                    if ((data.ces.urine || data.ces.rectal || data.ces.saddle || data.ces.sex) && data.ces.duration === 'clinic') {
+                        advices.push({ type: 'blue', title: 'ℹ️ SPINAL CLINIC (Stable CES Symptoms)', text: `Refer to Spinal Assessment Clinic (SAC) using Oceano discharge option.<br>Safety net about progressive signs.` });
+                    }
+                    if (data.hx.sciatica) {
+                        advices.push({ type: 'blue', title: 'ℹ️ SPINAL CLINIC (Bilateral Sciatica)', text: `Refer to Spinal Assessment Clinic.` });
+                    }
+                    if (data.hx.chronic) {
+                        advices.push({ type: 'blue', title: 'ℹ️ SPINAL CLINIC (Neuro > 6 Weeks)', text: `Refer to Spinal Assessment Clinic.` });
+                    }
+                    if (data.neuro.slr_pos) {
+                        advices.push({ type: 'blue', title: 'ℹ️ SPINAL CLINIC (Positive SLR)', text: `Refer to Spinal Assessment Clinic.` });
+                    }
                 }
 
                 data.plan.generatedAdvice = advices;
@@ -796,9 +792,6 @@
                 // START NOTE GENERATION
                 let t = `<strong>Low Back Pain Assessment (BHH/GHH)</strong>\n`;
                 t += `Date: ${data.pt.date} ${data.pt.time}\n`;
-                
-                // IMPORTANT: Name and DOB are deliberately EXCLUDED as per instruction
-                if(data.pt.hosp) t += `Hosp No: ${data.pt.hosp}\n`;
                 
                 // Red Flags
                 t += `\n<strong>History & Red Flags</strong>\n`;
@@ -901,11 +894,8 @@
 
             function setupListeners() {
                 // Inputs
-                ['ptName','ptHosp','ptDob','assessmentDate','assessmentTime','hx_notes','ex_temp','ex_abdomen','slr_r','slr_l','plan_notes'].forEach(id => {
+                ['assessmentDate','assessmentTime','hx_notes','ex_temp','ex_abdomen','slr_r','slr_l','plan_notes'].forEach(id => {
                     document.getElementById(id).addEventListener('input', (e) => {
-                         if(id==='ptName') data.pt.name=e.target.value;
-                         if(id==='ptHosp') data.pt.hosp=e.target.value;
-                         if(id==='ptDob') data.pt.dob=e.target.value;
                          if(id==='assessmentDate') data.pt.date=e.target.value;
                          if(id==='assessmentTime') data.pt.time=e.target.value;
                          
@@ -1009,27 +999,24 @@
                 // Reset
                 document.getElementById('resetData').addEventListener('click', () => {
                     if(confirm("Clear all data?")) {
-                        localStorage.removeItem('bhh_back_pain_data_v26');
+                        localStorage.removeItem('bhh_back_pain_data_v26_1');
                         location.reload();
                     }
                 });
             }
 
             function saveState() {
-                localStorage.setItem('bhh_back_pain_data_v26', JSON.stringify(data));
+                localStorage.setItem('bhh_back_pain_data_v26_1', JSON.stringify(data));
             }
 
             function loadState() {
-                const s = localStorage.getItem('bhh_back_pain_data_v26');
+                const s = localStorage.getItem('bhh_back_pain_data_v26_1');
                 if(s) {
                     try {
                         const saved = JSON.parse(s);
                         data = { ...data, ...saved };
                         
                         // Inputs
-                        document.getElementById('ptName').value = data.pt.name;
-                        document.getElementById('ptHosp').value = data.pt.hosp;
-                        document.getElementById('ptDob').value = data.pt.dob;
                         document.getElementById('assessmentDate').value = data.pt.date;
                         document.getElementById('assessmentTime').value = data.pt.time;
                         document.getElementById('hx_notes').value = data.hx.notes;
