@@ -30,28 +30,45 @@
             overflow-y: auto;
             white-space: pre-wrap; 
         }
-        .rich-output strong { font-weight: 800; color: #0f172a; }
+        /* Updated to target spans with specific style if needed, though inline style is now used */
+        .rich-output span[style*="bold"] { color: #0f172a; }
 
-        /* Buttons */
+        /* Standard Buttons */
         .std-btn { transition: all 0.1s; border-color: #cbd5e1; background-color: #f8fafc; color: #334155; }
         .std-btn:hover { background-color: #e2e8f0; }
         .std-btn.active { background-color: #2563eb; color: white; border-color: #1d4ed8; font-weight: 800; }
+
+        /* Neuro Toggle Buttons */
+        .neuro-btn {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border: 1px solid #cbd5e1;
+            background-color: #ffffff;
+            color: #475569;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.1s;
+            min-width: 24px;
+            text-align: center;
+        }
+        .neuro-btn:hover { background-color: #f1f5f9; border-color: #94a3b8; }
+        .neuro-btn.active {
+            background-color: #2563eb; 
+            color: white; 
+            border-color: #1d4ed8;
+            font-weight: 800;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        /* Specific colors for Sensation Abnormalities if active */
+        .neuro-btn[data-val="Reduced"].active { background-color: #ea580c; border-color: #c2410c; }
+        .neuro-btn[data-val="Absent"].active { background-color: #dc2626; border-color: #b91c1c; }
+        .neuro-btn[data-val="Increased"].active { background-color: #7c3aed; border-color: #6d28d9; }
+
 
         /* Flags */
         .flag-btn { transition: all 0.1s; background-color: white; border-color: #fecaca; color: #7f1d1d; }
         .flag-btn:hover { background-color: #fef2f2; }
         .flag-btn.active { background-color: #dc2626; color: white; border-color: #991b1b; font-weight: 800; }
-
-        /* Inputs */
-        .neuro-cell select {
-            font-size: 0.75rem;
-            padding: 6px;
-            width: 100%;
-            border-radius: 4px;
-            border: 1px solid #cbd5e1;
-            background-color: #fff;
-            font-weight: 600;
-        }
 
         /* Nav */
         .nav-link {
@@ -116,7 +133,7 @@
                 <div class="flex items-center gap-3">
                     <div class="h-10 w-10 bg-blue-800 rounded flex items-center justify-center text-white font-black text-xs shadow-sm">NHS</div>
                     <div>
-                        <h1 class="text-lg md:text-xl font-black text-slate-900 leading-tight">Back Pain Assessment <span class="text-[10px] font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border align-middle ml-1">BHH/GHH v26.1</span></h1>
+                        <h1 class="text-lg md:text-xl font-black text-slate-900 leading-tight">Back Pain Assessment <span class="text-[10px] font-medium text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border align-middle ml-1">BHH/GHH v26.2</span></h1>
                         <p class="text-[10px] text-green-600 font-bold flex items-center gap-1">
                             <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Auto-save Active
                         </p>
@@ -180,7 +197,7 @@
                         </button>
                     </div>
                     <div class="hidden p-3 bg-red-50 border border-red-200 rounded text-xs text-red-900 font-medium" id="bloods_advice">
-                        ⚠️ <strong>ACTION:</strong> Request Bloods (FBC, ESR, CRP, U&Es, Creatinine, Liver, Bone). Consider UHB MSCC Guidelines.
+                        ⚠️ <span style="font-weight:bold">ACTION:</span> Request Bloods (FBC, ESR, CRP, U&Es, Creatinine, Liver, Bone). Consider UHB MSCC Guidelines.
                     </div>
                 </section>
 
@@ -366,7 +383,6 @@
                                 </div>
                                 <div class="w-32 flex-shrink-0">
                                     <img src="images/slr_test.png" alt="SLR Test" class="w-full h-auto rounded border border-slate-300 bg-white" onerror="this.style.display='none'">
-                                    <div class="text-[10px] text-center text-slate-400 mt-1">Image: images/slr_test.png</div>
                                 </div>
                             </div>
                         </div>
@@ -433,8 +449,8 @@
                             <thead>
                                 <tr class="bg-slate-100 text-slate-600 text-xs uppercase">
                                     <th class="p-2 text-left border border-slate-200">Level / Action</th>
-                                    <th class="p-2 w-20 border border-slate-200 text-center">Right</th>
-                                    <th class="p-2 w-20 border border-slate-200 text-center">Left</th>
+                                    <th class="p-2 border border-slate-200 text-center">Right</th>
+                                    <th class="p-2 border border-slate-200 text-center">Left</th>
                                 </tr>
                             </thead>
                             <tbody id="power_grid_body">
@@ -475,8 +491,8 @@
                             <thead>
                                 <tr class="bg-slate-100 text-slate-600 text-xs uppercase">
                                     <th class="p-2 text-left border border-slate-200">Dermatome</th>
-                                    <th class="p-2 w-20 border border-slate-200 text-center">Right</th>
-                                    <th class="p-2 w-20 border border-slate-200 text-center">Left</th>
+                                    <th class="p-2 border border-slate-200 text-center">Right</th>
+                                    <th class="p-2 border border-slate-200 text-center">Left</th>
                                 </tr>
                             </thead>
                             <tbody id="sens_grid_body">
@@ -570,7 +586,7 @@
 
                 <footer class="mt-8 py-8 text-center border-t border-slate-300">
                     <p class="text-xs text-slate-500 font-bold mb-1">University Hospitals Birmingham NHS Foundation Trust</p>
-                    <p class="text-[10px] text-slate-400">Based on BHH/GHH ED Back Pain Assessment 26.1</p>
+                    <p class="text-[10px] text-slate-400">Based on BHH/GHH ED Back Pain Assessment 26.2</p>
                 </footer>
             </div>
 
@@ -636,8 +652,8 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-2 border border-slate-200 font-bold text-slate-700">${p.label}</td>
-                    <td class="p-2 border border-slate-200 neuro-cell"><select data-type="power" data-side="r" data-lvl="${p.id}">${genOpts(5)}</select></td>
-                    <td class="p-2 border border-slate-200 neuro-cell"><select data-type="power" data-side="l" data-lvl="${p.id}">${genOpts(5)}</select></td>
+                    <td class="p-2 border border-slate-200 neuro-cell"><div class="flex gap-1 justify-center" data-group="power" data-side="r" data-lvl="${p.id}">${genBtns([5,4,3,2,1,0], 5)}</div></td>
+                    <td class="p-2 border border-slate-200 neuro-cell"><div class="flex gap-1 justify-center" data-group="power" data-side="l" data-lvl="${p.id}">${genBtns([5,4,3,2,1,0], 5)}</div></td>
                 `;
                 pBody.appendChild(tr);
             });
@@ -647,20 +663,17 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-2 border border-slate-200 font-bold text-slate-700">${s.label}</td>
-                    <td class="p-2 border border-slate-200 neuro-cell"><select data-type="sens" data-side="r" data-lvl="${s.id}">${genSensOpts()}</select></td>
-                    <td class="p-2 border border-slate-200 neuro-cell"><select data-type="sens" data-side="l" data-lvl="${s.id}">${genSensOpts()}</select></td>
+                    <td class="p-2 border border-slate-200 neuro-cell"><div class="flex gap-1 justify-center" data-group="sens" data-side="r" data-lvl="${s.id}">${genBtns(['Normal','Reduced','Absent','Increased'], 'Normal')}</div></td>
+                    <td class="p-2 border border-slate-200 neuro-cell"><div class="flex gap-1 justify-center" data-group="sens" data-side="l" data-lvl="${s.id}">${genBtns(['Normal','Reduced','Absent','Increased'], 'Normal')}</div></td>
                 `;
                 sBody.appendChild(tr);
             });
 
-            function genOpts(max) {
-                let h = '<option value="5">5</option>';
-                for(let i=4; i>=0; i--) h += `<option value="${i}">${i}</option>`;
-                return h;
-            }
-
-            function genSensOpts() {
-                return '<option value="Normal">N</option><option value="Reduced">Red</option><option value="Absent">Abs</option><option value="Increased">Inc</option>';
+            function genBtns(opts, def) {
+                return opts.map(o => {
+                    const label = (o === 'Normal') ? 'N' : (o === 'Reduced' ? 'Red' : (o === 'Absent' ? 'Abs' : (o === 'Increased' ? 'Inc' : o)));
+                    return `<button class="neuro-btn ${o == def ? 'active' : ''}" data-val="${o}">${label}</button>`;
+                }).join('');
             }
 
             // Defaults
@@ -790,11 +803,14 @@
 
             function renderNote() {
                 // START NOTE GENERATION
-                let t = `<strong>Low Back Pain Assessment (BHH/GHH)</strong>\n`;
+                const bStart = '<span style="font-weight:bold">';
+                const bEnd = '</span>';
+
+                let t = `${bStart}Low Back Pain Assessment (BHH/GHH)${bEnd}\n`;
                 t += `Date: ${data.pt.date} ${data.pt.time}\n`;
                 
                 // Red Flags
-                t += `\n<strong>History & Red Flags</strong>\n`;
+                t += `\n${bStart}History & Red Flags${bEnd}\n`;
                 if(data.flags.length === 0) t += "No general red flags reported (No Hx Cancer, Weight loss, IVDU, Steroids, Immunosuppression).\n";
                 else t += `⚠️ POSITIVE FLAGS: ${data.flags.join(', ')}.\n`;
                 
@@ -803,11 +819,10 @@
                 if(data.hx.fracture) t += "- Suspected Spinal Fracture (Trauma/Osteoporosis).\n";
                 if(data.hx.immobile) t += "- New onset severe pain + Immobile.\n";
                 
-                // Always add Hx Notes if present, or state 'No additonal notes' to ensure field is captured
                 if(data.hx.notes) t += `Notes: ${data.hx.notes}\n`;
 
                 // CES
-                t += `\n<strong>Cauda Equina Screen</strong>\n`;
+                t += `\n${bStart}Cauda Equina Screen${bEnd}\n`;
                 const cesSx = [];
                 if(data.ces.urine) cesSx.push("Bladder Dysfunction");
                 if(data.ces.rectal) cesSx.push("Loss of Rectal Sensation");
@@ -823,7 +838,7 @@
                 }
 
                 // General Exam
-                t += `\n<strong>Examination</strong>\n`;
+                t += `\n${bStart}Examination${bEnd}\n`;
                 if(data.exam.temp) t += `Temp: ${data.exam.temp}°C. `;
                 if(data.exam.abdomen) t += `Abdomen: ${data.exam.abdomen}. `;
                 t += "\n";
@@ -833,7 +848,7 @@
                 if(data.exam.tender) t += "⚠️ Vertebral Tenderness (+Abnormal Xray).\n";
 
                 // Neuro
-                t += `\n<strong>Neurology</strong>\n`;
+                t += `\n${bStart}Neurology${bEnd}\n`;
                 t += `SLR: R ${data.neuro.slr_r || '-'}° | L ${data.neuro.slr_l || '-'}°`;
                 if(data.neuro.slr_pos) t += " (Positive)"; else t += " (Negative)";
                 t += "\n";
@@ -843,9 +858,8 @@
                 t += "Power (R/L): ";
                 let pTxt = [];
                 powerLevels.forEach(l => {
-                    const r = data.neuro.power[`r_${l.id}`] || '-';
-                    const left = data.neuro.power[`l_${l.id}`] || '-';
-                    // Capture ALL readings, not just abnormal, to ensure full documentation
+                    const r = data.neuro.power[`r_${l.id}`] || '5';
+                    const left = data.neuro.power[`l_${l.id}`] || '5';
                     if(r !== '5' || left !== '5') pTxt.push(`${l.label} ${r}/${left}`);
                 });
                 if (pTxt.length === 0) t += "5/5 throughout (L2-S1)\n";
@@ -873,7 +887,7 @@
                 t += `PR: Sensation: ${data.neuro.pr.sens} | Tone: ${data.neuro.pr.tone}\n`;
 
                 // Plan
-                t += `\n<strong>Plan</strong>\n`;
+                t += `\n${bStart}Plan${bEnd}\n`;
                 if (data.plan.generatedAdvice && data.plan.generatedAdvice.length > 0) {
                     t += `PRO FORMA GUIDANCE:\n`;
                     data.plan.generatedAdvice.forEach(a => {
@@ -947,14 +961,23 @@
                     });
                 });
 
-                // Selects
-                document.getElementById('sec-neuro').addEventListener('change', (e) => {
-                    if(e.target.tagName === 'SELECT') {
-                        const t = e.target.dataset.type;
-                        if(t === 'power' || t === 'sens') {
-                            const key = `${e.target.dataset.side}_${e.target.dataset.lvl}`;
-                            data.neuro[t][key] = e.target.value;
-                        }
+                // Neuro Buttons (Event Delegation)
+                document.getElementById('sec-neuro').addEventListener('click', (e) => {
+                    if(e.target.classList.contains('neuro-btn')) {
+                        const btn = e.target;
+                        const container = btn.parentElement;
+                        // Clear active in group
+                        Array.from(container.children).forEach(b => b.classList.remove('active'));
+                        // Set active
+                        btn.classList.add('active');
+
+                        const group = container.dataset.group; // power or sens
+                        const side = container.dataset.side;
+                        const lvl = container.dataset.lvl;
+                        const val = btn.dataset.val;
+
+                        // Save data
+                        data.neuro[group][`${side}_${lvl}`] = val;
                         updateAll();
                     }
                 });
@@ -986,13 +1009,30 @@
                     });
                 });
 
-                // Copy
+                // Copy with Format
                 document.getElementById('copyNote').addEventListener('click', async () => {
                     const el = document.getElementById('noteOutput');
-                    await navigator.clipboard.writeText(el.innerText);
                     const btn = document.getElementById('copyNote');
                     const orig = btn.innerText;
-                    btn.innerText = "✅";
+
+                    try {
+                        const htmlContent = el.innerHTML;
+                        const textContent = el.innerText;
+                        
+                        const blobHtml = new Blob([htmlContent], { type: 'text/html' });
+                        const blobText = new Blob([textContent], { type: 'text/plain' });
+                        
+                        const data = [new ClipboardItem({
+                            'text/html': blobHtml,
+                            'text/plain': blobText
+                        })];
+                        
+                        await navigator.clipboard.write(data);
+                        btn.innerText = "✅";
+                    } catch (err) {
+                        console.error("Copy failed", err);
+                        btn.innerText = "❌";
+                    }
                     setTimeout(() => btn.innerText = orig, 1000);
                 });
 
@@ -1053,12 +1093,31 @@
                             if(r) r.checked = true;
                         }
 
-                        // Selects
-                        document.querySelectorAll('select[data-type]').forEach(sel => {
-                            const t = sel.dataset.type;
-                            const key = `${sel.dataset.side}_${sel.dataset.lvl}`;
-                            if(data.neuro[t] && data.neuro[t][key]) sel.value = data.neuro[t][key];
-                        });
+                        // Restore Neuro Buttons (Power & Sens)
+                        // Power
+                         powerLevels.forEach(l => {
+                             ['r','l'].forEach(side => {
+                                 const val = data.neuro.power[`${side}_${l.id}`] || '5';
+                                 const container = document.querySelector(`div[data-group="power"][data-side="${side}"][data-lvl="${l.id}"]`);
+                                 if(container) {
+                                     const btn = container.querySelector(`button[data-val="${val}"]`);
+                                     if(btn) btn.classList.add('active');
+                                 }
+                             });
+                         });
+                         // Sens
+                         sensLevels.forEach(l => {
+                             ['r','l'].forEach(side => {
+                                 const val = data.neuro.sens[`${side}_${l.id}`] || 'Normal';
+                                 const container = document.querySelector(`div[data-group="sens"][data-side="${side}"][data-lvl="${l.id}"]`);
+                                 if(container) {
+                                     const btn = container.querySelector(`button[data-val="${val}"]`);
+                                     if(btn) btn.classList.add('active');
+                                 }
+                             });
+                         });
+
+                        // Reflexes
                          ['k_r','k_l','a_r','a_l','p_r','p_l'].forEach(k => {
                             const domId = k.replace('k_','ref_knee_').replace('a_','ref_ank_').replace('p_','ref_pl_');
                             if(data.neuro.reflex[k]) document.getElementById(domId).value = data.neuro.reflex[k];
