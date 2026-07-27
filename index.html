@@ -124,6 +124,50 @@
             100% { transform: scale(1); opacity: 1; }
         }
     </style>
+<style>
+/* ── SharePoint-safe two-column layout ───────────────────── */
+.app-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 1.25rem;
+    align-items: start;
+}
+.app-main-col {
+    min-width: 0;
+}
+.app-epr-col {
+    position: sticky;
+    top: 72px;
+    max-height: calc(100vh - 82px);
+    overflow-y: auto;
+}
+@media print {
+    .app-epr-col { display: none !important; }
+    .app-grid { display: block !important; }
+}
+</style>
+<style>
+/* ── SharePoint-safe two-column layout ───────────────────── */
+.app-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 1.25rem;
+    align-items: start;
+}
+.app-main-col {
+    min-width: 0;
+}
+.app-epr-col {
+    position: sticky;
+    top: 72px;
+    max-height: calc(100vh - 82px);
+    overflow-y: auto;
+}
+@media print {
+    .app-epr-col { display: none !important; }
+    .app-grid { display: block !important; }
+}
+</style>
 </head>
 <body class="bg-slate-100 text-slate-900 antialiased pb-20">
 
@@ -157,7 +201,7 @@
     </header>
 
     <main class="container mx-auto px-4 py-6">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="app-grid">
             
             <div class="lg:col-span-7 xl:col-span-8 flex flex-col space-y-6">
 
@@ -595,9 +639,9 @@
                     <section class="bg-white p-4 rounded-xl shadow-lg border border-slate-300">
                         <div class="flex justify-between items-center mb-3">
                             <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wide">Live Note</h2>
-                            <button id="copyNote" class="px-3 py-1 text-xs font-bold bg-blue-600 text-white rounded hover:bg-blue-700 transition shadow-sm">Copy</button>
+                            <button id="epr-output" class="px-3 py-1 text-xs font-bold bg-blue-600 text-white rounded hover:bg-blue-700 transition shadow-sm">Copy</button>
                         </div>
-                        <div id="noteOutput" contenteditable="true" class="rich-output focus:ring-2 ring-blue-500 ring-offset-2"></div>
+                        <div id="epr-output" contenteditable="true" class="rich-output focus:ring-2 ring-blue-500 ring-offset-2"></div>
                     </section>
                 </div>
             </div>
@@ -605,6 +649,53 @@
     </main>
 
     <script>
+function copyRichText() {
+    var el = document.getElementById('epr-output');
+    if (!el) return;
+    var htmlContent = el.innerHTML;
+    var plainText = el.innerText;
+    var copyBtn = document.getElementById('copy-rich-text-btn');
+    function flashBtn(ok) {
+        if (!copyBtn) return;
+        var orig = copyBtn.textContent;
+        copyBtn.textContent = ok ? '\u2713 Copied!' : 'Copy failed';
+        copyBtn.style.background = ok ? '#16a34a' : '#dc2626';
+        setTimeout(function() {
+            copyBtn.textContent = orig;
+            copyBtn.style.background = '';
+        }, 1500);
+    }
+    if (navigator.clipboard && window.ClipboardItem) {
+        navigator.clipboard.write([
+            new ClipboardItem({
+                'text/html':  new Blob([htmlContent], { type: 'text/html' }),
+                'text/plain': new Blob([plainText],  { type: 'text/plain' })
+            })
+        ]).then(function() { flashBtn(true); })
+          .catch(function() {
+            navigator.clipboard.writeText(plainText)
+                .then(function() { flashBtn(true); })
+                .catch(function() { flashBtn(false); });
+        });
+    } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(plainText)
+            .then(function() { flashBtn(true); })
+            .catch(function() { flashBtn(false); });
+    } else {
+        try {
+            var range = document.createRange();
+            range.selectNodeContents(el);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+            document.execCommand('copy');
+            sel.removeAllRanges();
+            flashBtn(true);
+        } catch(e) { flashBtn(false); }
+    }
+}
+
+
         // Global Toggle Function for Guides
         function toggleGuide(id) {
             const el = document.getElementById(id);
