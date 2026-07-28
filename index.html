@@ -893,106 +893,121 @@ function copyRichText() {
             }
 
             function renderNote() {
-                // START NOTE GENERATION
-                const bStart = '<span style="font-weight:bold">';
-                const bEnd = '</span>';
+                const b = (txt) => `<span style="font-weight:bold">${txt}</span>`;
+                const val = (v, placeholder) => (v && String(v).trim()) ? v : `<span style="color:#94a3b8">[${placeholder}]</span>`;
+                const yesNo = (v, yesLabel, noLabel) => v ? yesLabel : noLabel;
 
-                let t = `${bStart}Low Back Pain Assessment (BHH/GHH)${bEnd}\n`;
-                t += `Date: ${data.pt.date} ${data.pt.time}\n`;
-                
-                // Red Flags
-                t += `\n${bStart}History & Red Flags${bEnd}\n`;
-                if(data.flags.length === 0) t += "No general red flags reported (No Hx Cancer, Weight loss, IVDU, Steroids, Immunosuppression).\n";
-                else t += `⚠️ POSITIVE FLAGS: ${data.flags.join(', ')}.\n`;
-                
-                if(data.hx.sciatica) t += "- Sudden onset bilateral/progressing sciatica.\n";
-                if(data.hx.chronic) t += "- Chronic Neuro findings (>6 weeks, stable).\n";
-                if(data.hx.fracture) t += "- Suspected Spinal Fracture (Trauma/Osteoporosis).\n";
-                if(data.hx.immobile) t += "- New onset severe pain + Immobile.\n";
-                
-                if(data.hx.notes) t += `Notes: ${data.hx.notes}\n`;
+                let t = b('LOW BACK PAIN ASSESSMENT — BHH / GHH') + '<br>';
+                t += `Date: ${val(data.pt.date,'dd/mm/yyyy')} &nbsp; Time: ${val(data.pt.time,'hh:mm')}<br>`;
+                t += '<br>';
 
-                // CES
-                t += `\n${bStart}Cauda Equina Screen${bEnd}\n`;
+                // ── RED FLAGS ─────────────────────────────────────────────────
+                t += b('HISTORY &amp; RED FLAGS') + '<br>';
+                if (data.flags && data.flags.length > 0) {
+                    t += `<span style="color:#dc2626;font-weight:bold">⚠️ POSITIVE FLAGS: ${data.flags.join(', ')}</span><br>`;
+                } else {
+                    t += 'General red flags: <span style="color:#16a34a">None identified</span><br>';
+                }
+                if (data.hx.sciatica) t += '<span style="color:#dc2626">⚠️ Sudden onset bilateral/progressing sciatica</span><br>';
+                if (data.hx.chronic)  t += '<span style="color:#d97706">Chronic neuro findings (&gt;6 weeks, stable)</span><br>';
+                if (data.hx.fracture) t += '<span style="color:#dc2626">⚠️ Suspected spinal fracture (trauma/osteoporosis)</span><br>';
+                if (data.hx.immobile) t += '<span style="color:#dc2626">⚠️ New onset severe pain + immobile</span><br>';
+                if (data.hx.notes) t += `History notes: ${data.hx.notes}<br>`;
+                t += '<br>';
+
+                // ── CAUDA EQUINA ──────────────────────────────────────────────
+                t += b('CAUDA EQUINA SCREEN') + '<br>';
                 const cesSx = [];
-                if(data.ces.urine) cesSx.push("Bladder Dysfunction");
-                if(data.ces.rectal) cesSx.push("Loss of Rectal Sensation");
-                if(data.ces.saddle) cesSx.push("Altered Saddle Sensation");
-                if(data.ces.sex) cesSx.push("Sexual Dysfunction");
-                
-                if(cesSx.length === 0) t += "Negative for CES symptoms.\n";
-                else {
-                    t += `⚠️ POSITIVE CES SYMPTOMS: ${cesSx.join(', ')}.\n`;
-                    if(data.ces.duration === 'emergency') t += "Duration: <14 Days / Deteriorating -> Emergency Protocol.\n";
-                    else if(data.ces.duration === 'clinic') t += "Duration: >15 Days & Stable -> Spinal Clinic.\n";
-                    else t += "Duration not specified.\n";
+                if (data.ces.urine)  cesSx.push('Bladder dysfunction');
+                if (data.ces.rectal) cesSx.push('Loss of rectal sensation');
+                if (data.ces.saddle) cesSx.push('Altered saddle sensation');
+                if (data.ces.sex)    cesSx.push('Sexual dysfunction');
+
+                if (cesSx.length === 0) {
+                    t += 'CES screen: <span style="color:#16a34a">Negative</span> — no bladder/bowel/saddle symptoms reported<br>';
+                } else {
+                    t += `<span style="color:#dc2626;font-weight:bold">⚠️ POSITIVE CES: ${cesSx.join(', ')}</span><br>`;
+                    if (data.ces.duration === 'emergency') t += '<span style="color:#dc2626;font-weight:bold">Duration: &lt;14 days / deteriorating → EMERGENCY PROTOCOL</span><br>';
+                    else if (data.ces.duration === 'clinic') t += 'Duration: &gt;15 days &amp; stable → Spinal clinic referral<br>';
+                    else t += 'Duration: [not specified]<br>';
                 }
+                if (data.ces.onset) t += `CES onset: ${data.ces.onset}<br>`;
+                t += '<br>';
 
-                // General Exam
-                t += `\n${bStart}Examination${bEnd}\n`;
-                if(data.exam.temp) t += `Temp: ${data.exam.temp}°C. `;
-                if(data.exam.abdomen) t += `Abdomen: ${data.exam.abdomen}. `;
-                t += "\n";
-                if(data.exam.saddle) t += "⚠️ Saddle Anaesthesia Present.\n"; else t += "No Saddle Anaesthesia.\n";
-                if(data.exam.severe_motor) t += "⚠️ Severe Motor Deficit (Grade <=3).\n";
-                if(data.exam.hypertonia) t += "⚠️ Hypertonia/UMN signs present.\n";
-                if(data.exam.tender) t += "⚠️ Vertebral Tenderness (+Abnormal Xray).\n";
+                // ── EXAMINATION ───────────────────────────────────────────────
+                t += b('EXAMINATION') + '<br>';
+                t += `Temperature: ${val(data.exam.temp, 'not recorded')}°C &nbsp; `;
+                t += `Abdomen: ${val(data.exam.abdomen, 'not examined')}<br>`;
+                t += data.exam.saddle      ? '<span style="color:#dc2626;font-weight:bold">⚠️ Saddle anaesthesia present</span><br>' 
+                                           : 'Saddle sensation: intact<br>';
+                t += data.exam.severe_motor ? '<span style="color:#dc2626;font-weight:bold">⚠️ Severe motor deficit (Grade ≤3)</span><br>' : '';
+                t += data.exam.hypertonia   ? '<span style="color:#dc2626;font-weight:bold">⚠️ Hypertonia / UMN signs present</span><br>' : '';
+                t += data.exam.tender       ? '<span style="color:#dc2626;font-weight:bold">⚠️ Vertebral tenderness (+ abnormal X-ray)</span><br>' : '';
+                t += '<br>';
 
-                // Neuro
-                t += `\n${bStart}Neurology${bEnd}\n`;
-                t += `SLR: R ${data.neuro.slr_r || '-'}° | L ${data.neuro.slr_l || '-'}°`;
-                if(data.neuro.slr_pos) t += " (Positive)"; else t += " (Negative)";
-                t += "\n";
-                
-                t += `Tone: R:${data.neuro.tone_r} L:${data.neuro.tone_l}\n`;
+                // ── NEUROLOGY ─────────────────────────────────────────────────
+                t += b('NEUROLOGY') + '<br>';
+                const slrR = data.neuro.slr_r || '—';
+                const slrL = data.neuro.slr_l || '—';
+                const slrPos = data.neuro.slr_pos;
+                t += `SLR: R ${slrR}° | L ${slrL}° — ${slrPos ? '<span style="color:#dc2626">Positive</span>' : '<span style="color:#16a34a">Negative</span>'}<br>`;
+                t += `Tone: R: ${data.neuro.tone_r || '—'} | L: ${data.neuro.tone_l || '—'}<br>`;
 
-                t += "Power (R/L): ";
+                // Power
+                t += 'Power (R/L): ';
                 let pTxt = [];
-                powerLevels.forEach(l => {
-                    const r = data.neuro.power[`r_${l.id}`] || '5';
-                    const left = data.neuro.power[`l_${l.id}`] || '5';
-                    if(r !== '5' || left !== '5') pTxt.push(`${l.label} ${r}/${left}`);
-                });
-                if (pTxt.length === 0) t += "5/5 throughout (L2-S1)\n";
-                else t += pTxt.join(', ') + "\n";
-
-                t += "Sensation (R/L): ";
-                let sTxt = [];
-                let abnormalSens = false;
-                sensLevels.forEach(l => {
-                    const r = data.neuro.sens[`r_${l.id}`] || 'Normal';
-                    const left = data.neuro.sens[`l_${l.id}`] || 'Normal';
-                    if(r !== 'Normal' || left !== 'Normal') {
-                        sTxt.push(`${l.label} ${r}/${left}`);
-                        abnormalSens = true;
-                    }
-                });
-                t += abnormalSens ? sTxt.join(', ') : "Normal throughout (L1-S4)";
-                t += "\n";
-                
-                t += "Reflexes (R/L): ";
-                t += `Knee ${data.neuro.reflex.k_r||'-'}/${data.neuro.reflex.k_l||'-'} | `;
-                t += `Ankle ${data.neuro.reflex.a_r||'-'}/${data.neuro.reflex.a_l||'-'} | `;
-                t += `Plantar ${data.neuro.reflex.p_r||'-'}/${data.neuro.reflex.p_l||'-'}\n`;
-                
-                t += `PR: Sensation: ${data.neuro.pr.sens} | Tone: ${data.neuro.pr.tone}\n`;
-
-                // Plan
-                t += `\n${bStart}Plan${bEnd}\n`;
-                if (data.plan.generatedAdvice && data.plan.generatedAdvice.length > 0) {
-                    t += `PRO FORMA GUIDANCE:\n`;
-                    data.plan.generatedAdvice.forEach(a => {
-                        t += `[${a.title}] \n`;
-                        let txt = a.text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-                        t += `${txt}\n`;
+                if (typeof powerLevels !== 'undefined') {
+                    powerLevels.forEach(l => {
+                        const r = data.neuro.power[`r_${l.id}`] || '5';
+                        const lv = data.neuro.power[`l_${l.id}`] || '5';
+                        if (r !== '5' || lv !== '5') pTxt.push(`${l.label} ${r}/${lv}`);
                     });
-                    t += `\n`;
                 }
+                t += pTxt.length === 0 ? '<span style="color:#16a34a">5/5 throughout (L2–S1)</span>' : pTxt.join(', ');
+                t += '<br>';
 
-                if(data.flags.length > 0) t += "Inv: Bloods (FBC/UE/LFT/CRP/ESR/Bone)\n";
-                if(data.hx.fracture) t += "Inv: CT/X-Ray Spine\n";
-                if(data.plan.disp) t += `Disposition: ${data.plan.disp}\n`;
-                if(data.plan.notes) t += `${data.plan.notes}\n`;
+                // Sensation
+                t += 'Sensation (R/L): ';
+                let sTxt = [];
+                let abnSens = false;
+                if (typeof sensLevels !== 'undefined') {
+                    sensLevels.forEach(l => {
+                        const r = data.neuro.sens[`r_${l.id}`] || 'Normal';
+                        const lv = data.neuro.sens[`l_${l.id}`] || 'Normal';
+                        if (r !== 'Normal' || lv !== 'Normal') { sTxt.push(`${l.label} ${r}/${lv}`); abnSens = true; }
+                    });
+                }
+                t += abnSens ? sTxt.join(', ') : '<span style="color:#16a34a">Normal throughout (L1–S4)</span>';
+                t += '<br>';
+
+                // Reflexes
+                const kR = data.neuro.reflex.k_r || '—';
+                const kL = data.neuro.reflex.k_l || '—';
+                const aR = data.neuro.reflex.a_r || '—';
+                const aL = data.neuro.reflex.a_l || '—';
+                const pR = data.neuro.reflex.p_r || '—';
+                const pL = data.neuro.reflex.p_l || '—';
+                t += `Reflexes (R/L): Knee ${kR}/${kL} | Ankle ${aR}/${aL} | Plantar ${pR}/${pL}<br>`;
+                t += `PR: Sensation: ${data.neuro.pr.sens || '<span style="color:#94a3b8">[not performed]</span>'} | Tone: ${data.neuro.pr.tone || '<span style="color:#94a3b8">[not performed]</span>'}<br>`;
+                t += '<br>';
+
+                // ── PLAN ──────────────────────────────────────────────────────
+                t += b('PLAN') + '<br>';
+                if (data.plan.generatedAdvice && data.plan.generatedAdvice.length > 0) {
+                    t += b('Pro forma guidance:') + '<br>';
+                    data.plan.generatedAdvice.forEach(a => {
+                        t += `<span style="font-weight:bold">${a.title}</span><br>`;
+                        const txt = a.text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+                        t += `${txt}<br>`;
+                    });
+                    t += '<br>';
+                } else {
+                    t += '<span style="color:#94a3b8">[Complete assessment above to generate clinical guidance]</span><br>';
+                }
+                if (data.flags && data.flags.length > 0) t += 'Investigations: Bloods (FBC / U&amp;E / LFT / CRP / ESR / Bone profile)<br>';
+                if (data.hx.fracture) t += 'Investigations: CT/X-ray spine<br>';
+                t += `Disposition: ${val(data.plan.disp, 'not recorded')}<br>`;
+                if (data.plan.notes) t += `${data.plan.notes}<br>`;
 
                 document.getElementById('epr-output').innerHTML = t;
             }
