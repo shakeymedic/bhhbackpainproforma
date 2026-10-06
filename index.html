@@ -425,9 +425,6 @@
                                     <p><strong>Positive Result:</strong> Reproduction of patient's <em>familiar</em> leg pain (radicular) between 30-70° of elevation. Back pain alone is negative.</p>
                                     <p><strong>Sensitisation:</strong> If pain occurs, lower leg slightly until pain eases, then Dorsiflex foot. Return of pain confirms neural tissue origin.</p>
                                 </div>
-                                <div class="w-32 flex-shrink-0">
-                                    <img src="images/slr_test.png" alt="SLR Test" class="w-full h-auto rounded border border-slate-300 bg-white" onerror="this.style.display='none'">
-                                </div>
                             </div>
                         </div>
 
@@ -482,9 +479,6 @@
                                         <li><strong>L5:</strong> Great Toe Extension (EHL) - "Pull big toe up"</li>
                                         <li><strong>S1:</strong> Ankle Plantarflexion/Eversion - "Push foot down like a pedal"</li>
                                     </ul>
-                                </div>
-                                <div class="w-32 flex-shrink-0">
-                                     <img src="images/motor_exam.png" alt="Motor Exam" class="w-full h-auto rounded border border-slate-300 bg-white" onerror="this.style.display='none'">
                                 </div>
                              </div>
                         </div>
@@ -557,7 +551,6 @@
                                 <p><strong>Knee Jerk (L3/4):</strong> Tap patellar tendon.</p>
                                 <p><strong>Ankle Jerk (S1):</strong> Dorsiflex foot slightly, tap Achilles.</p>
                                 <p><strong>Plantar (Babinski):</strong> Stroke lateral sole heel to toe. <br>Normal = Flexion (Down). <br>Abnormal (UMN) = Extension/Fanning (Up).</p>
-                                <img src="images/reflexes.png" alt="Reflex Zones" class="w-full h-auto rounded border border-slate-300 bg-white mt-2" onerror="this.style.display='none'">
                             </div>
 
                             <div class="space-y-2">
@@ -1115,32 +1108,9 @@ function copyRichText() {
                     });
                 });
 
-                // Copy with Format
-                document.getElementById('copyNote').addEventListener('click', async () => {
-                    const el = document.getElementById('epr-output');
-                    const btn = document.getElementById('copyNote');
-                    const orig = btn.innerText;
-
-                    try {
-                        const htmlContent = el.innerHTML;
-                        const textContent = el.innerText;
-                        
-                        const blobHtml = new Blob([htmlContent], { type: 'text/html' });
-                        const blobText = new Blob([textContent], { type: 'text/plain' });
-                        
-                        const data = [new ClipboardItem({
-                            'text/html': blobHtml,
-                            'text/plain': blobText
-                        })];
-                        
-                        await navigator.clipboard.write(data);
-                        btn.innerText = "✅";
-                    } catch (err) {
-                        console.error("Copy failed", err);
-                        btn.innerText = "❌";
-                    }
-                    setTimeout(() => btn.innerText = orig, 1000);
-                });
+                // Copy with Format (rich text with plain-text fallback, see copyRichText above)
+                const copyBtn = document.getElementById('copy-rich-text-btn');
+                if (copyBtn) copyBtn.addEventListener('click', copyRichText);
 
                 // Reset
                 document.getElementById('resetData').addEventListener('click', () => {
